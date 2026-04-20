@@ -3,8 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-        xmlns:local="clr-namespace:volpt" xmlns:view="clr-namespace:volpt.MVVM.View" 
-        
+        xmlns:local="clr-namespace:volpt" xmlns:view="clr-namespace:volpt.MVVM.View"  
         xmlns:controls="clr-namespace:volpt.Core" mc:Ignorable="d" Title="ВПТ: Образование" 
         Height="768" Width="1024" MinHeight="768" MinWidth="1024"
         Background="Transparent">

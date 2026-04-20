@@ -7,7 +7,7 @@
         <Setter Property="Background" Value="{StaticResource Light2Brush}"/>
         <Setter Property="BorderBrush" Value="{StaticResource AccentLightBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="FontFamily" Value="{StaticResource SFProRounded-Regular}"/>
+        <Setter Property="FontFamily" Value="{StaticResource Nunito-Regular}"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="Padding" Value="8,4"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -51,7 +51,7 @@
         <Setter Property="Background" Value="{StaticResource Light2Brush}"/>
         <Setter Property="BorderBrush" Value="{StaticResource AccentLightBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="FontFamily" Value="{StaticResource SFProRounded-Regular}"/>
+        <Setter Property="FontFamily" Value="{StaticResource Nunito-Regular}"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="Padding" Value="8,4"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>

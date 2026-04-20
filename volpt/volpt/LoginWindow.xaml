@@ -30,7 +30,7 @@
                 </TextBlock>
             </StackPanel>
         <Border Background="{StaticResource BackgroundLightBrush}"
-                Width="391" Height="423"
+                MaxWidth="380" MinHeight="423" Margin="325,0"
                 CornerRadius="18" Padding="8" VerticalAlignment="Top">
             <Grid>
                 <Grid.RowDefinitions>

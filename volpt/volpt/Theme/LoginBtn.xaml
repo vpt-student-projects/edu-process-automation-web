@@ -4,7 +4,7 @@
         <!--Кнопки в хедере основного окна-->
         <Setter Property="Background" Value="{StaticResource AccentLightBrush}"/>
         <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
-        <Setter Property="FontFamily" Value="{StaticResource SFProRounded-Regular}"/>
+        <Setter Property="FontFamily" Value="{StaticResource Nunito-Regular}"/>
         <Setter Property="FontSize" Value="22"/>
         <Setter Property="Padding" Value="0,8"/>
         <Setter Property="Template">

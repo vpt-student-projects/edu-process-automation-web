@@ -1,51 +1,59 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    
-    <FontFamily x:Key="SFProRounded-Regular">pack://application:,,,/Fonts/#SF Pro Rounded Regular</FontFamily>
-    <FontFamily x:Key="SFProRounded-Medium">pack://application:,,,/Fonts/#SF Pro Rounded Medium</FontFamily>
-    <FontFamily x:Key="SFProRounded-Semibold">pack://application:,,,/Fonts/#SF Pro Rounded Semibold</FontFamily>
-    <FontFamily x:Key="SFProRounded-Bold">pack://application:,,,/Fonts/#SF Pro Rounded Bold</FontFamily>
-    <FontFamily x:Key="SFProRounded-Light">pack://application:,,,/Fonts/#SF Pro Rounded Light</FontFamily>
 
-    <FontFamily x:Key="SFCompactRounded-Regular">pack://application:,,,/Fonts/#SF Compact Rounded Regular</FontFamily>
-    <FontFamily x:Key="SFCompactRounded-Medium">pack://application:,,,/Fonts/#SF Compact Rounded Medium</FontFamily>
-    <FontFamily x:Key="SFCompactRounded-Semibold">pack://application:,,,/Fonts/#SF Compact Rounded Semibold</FontFamily>
-    <FontFamily x:Key="SFCompactRounded-Bold">pack://application:,,,/Fonts/#SF Compact Rounded Bold</FontFamily>
-    <FontFamily x:Key="SFCompactRounded-Light">pack://application:,,,/Fonts/#SF Compact Rounded Light</FontFamily>
+    <FontFamily x:Key="Nunito">pack://application:,,,/Fonts/#Nunito</FontFamily>
+
+    <FontFamily x:Key="Nunito-Regular">pack://application:,,,/Fonts/#Nunito</FontFamily>
+    <FontFamily x:Key="Nunito-Medium">pack://application:,,,/Fonts/#Nunito</FontFamily>
+    <FontFamily x:Key="Nunito-Semibold">pack://application:,,,/Fonts/#Nunito</FontFamily>
+    <FontFamily x:Key="Nunito-Bold">pack://application:,,,/Fonts/#Nunito</FontFamily>
+    <FontFamily x:Key="Nunito-Light">pack://application:,,,/Fonts/#Nunito</FontFamily>
+    <FontFamily x:Key="Nunito-Black">pack://application:,,,/Fonts/#Nunito</FontFamily>
 
     <Style x:Key="H1" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{StaticResource Light2Brush}"/>
-        <Setter Property="FontFamily" Value="{StaticResource SFProRounded-Semibold}"/>
+        <Setter Property="FontFamily" Value="{StaticResource Nunito}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="FontSize" Value="24"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
+
     <Style x:Key="H2" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}"/>
-        <Setter Property="FontFamily" Value="{StaticResource SFProRounded-Bold}"/>
+        <Setter Property="FontFamily" Value="{StaticResource Nunito}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="FontSize" Value="22"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
+
     <Style x:Key="H3" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}"/>
-        <Setter Property="FontFamily" Value="{StaticResource SFProRounded-Bold}"/>
+        <Setter Property="FontFamily" Value="{StaticResource Nunito}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
+
     <Style x:Key="H4" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}"/>
-        <Setter Property="FontFamily" Value="{StaticResource SFProRounded-Regular}"/>
+        <Setter Property="FontFamily" Value="{StaticResource Nunito}"/>
+        <Setter Property="FontWeight" Value="Regular"/>
         <Setter Property="FontSize" Value="18"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
+
     <Style x:Key="H5" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}"/>
-        <Setter Property="FontFamily" Value="{StaticResource SFProRounded-Regular}"/>
+        <Setter Property="FontFamily" Value="{StaticResource Nunito}"/>
+        <Setter Property="FontWeight" Value="Regular"/>
         <Setter Property="FontSize" Value="16"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
+
     <Style x:Key="H6" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}"/>
-        <Setter Property="FontFamily" Value="{StaticResource SFProRounded-Regular}"/>
+        <Setter Property="FontFamily" Value="{StaticResource Nunito}"/>
+        <Setter Property="FontWeight" Value="Regular"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>

@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Fonts\Nunito-VariableFont_wght.ttf" />
     <None Remove="Fonts\SF-Compact-Rounded-Black.otf" />
     <None Remove="Fonts\SF-Compact-Rounded-Bold.otf" />
     <None Remove="Fonts\SF-Compact-Rounded-Heavy.otf" />
@@ -47,6 +48,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Fonts\Nunito-VariableFont_wght.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Images\favicon.ico">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
@@ -69,60 +73,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Fonts\SF-Compact-Rounded-Black.otf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Fonts\SF-Compact-Rounded-Bold.otf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Fonts\SF-Compact-Rounded-Heavy.otf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Fonts\SF-Compact-Rounded-Light.otf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Fonts\SF-Compact-Rounded-Medium.otf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Fonts\SF-Compact-Rounded-Regular.otf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Fonts\SF-Compact-Rounded-Semibold.otf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Fonts\SF-Compact-Rounded-Thin.otf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Fonts\SF-Compact-Rounded-Ultralight.otf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Fonts\SF-Pro-Rounded-Black.otf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Fonts\SF-Pro-Rounded-Bold.otf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Fonts\SF-Pro-Rounded-Heavy.otf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Fonts\SF-Pro-Rounded-Light.otf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Fonts\SF-Pro-Rounded-Medium.otf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Fonts\SF-Pro-Rounded-Regular.otf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Fonts\SF-Pro-Rounded-Semibold.otf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Fonts\SF-Pro-Rounded-Thin.otf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Fonts\SF-Pro-Rounded-Ultralight.otf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
     <Resource Include="Images\chevron.left.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
