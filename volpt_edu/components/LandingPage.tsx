@@ -82,10 +82,11 @@ export default function LandingPage() {
                     </h1>
                 </div>
             </div>
-            <GlassCard
-                className="p-5 relative overflow-hidden"
-                intensity="high"
-            >
+            <GlassCard className="p-5 relative overflow-hidden" intensity="low">
+                {/* Декоративный кружок */}
+                <div className="absolute -bottom-20 -right-10 w-44 h-44 rounded-full bg-accent/10 " />
+                <div className="absolute -bottom-4 -right-2 w-24 h-24 rounded-full bg-accent/20 " />
+                <div className="absolute bottom-5 right-4 w-10 h-10 rounded-full bg-accent/30 " />
                 <p className="text-caption text-accent uppercase tracking-widest mb-1">
                     Цифровая платформа
                 </p>

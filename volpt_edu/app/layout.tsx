@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     title: "ВПТ: Образование",
     description: "Цифровое управление образованием",
     icons: {
-        icon: "/favicon.png",
+        icon: "/Frame 55.ico",
     },
 };
 
