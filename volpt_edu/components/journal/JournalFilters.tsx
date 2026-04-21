@@ -1,4 +1,3 @@
-// components/journal/JournalFilters.tsx
 "use client";
 
 import { ChevronRight } from "lucide-react";

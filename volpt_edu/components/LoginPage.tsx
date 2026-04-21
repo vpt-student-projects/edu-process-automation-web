@@ -33,12 +33,12 @@ export default function LoginPage() {
                     </label>
                     <div className="relative group">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <User className="h-5 w-5 text-secondary/60 group-focus-within:text-secondary transition-colors" />
+                            <User className="h-5 w-5 text-secondary/50 group-focus-within:text-secondary transition-colors" />
                         </div>
                         <input
                             type="text"
                             required
-                            className="block w-full text-body pl-12 pr-4 py-4 bg-primary/10 border border-primary/15 rounded-2xl text-text/50 group-focus-within:text-secondary placeholder-secondary/60 focus:outline-none focus:ring-1 focus:ring-accent/85 focus:bg-text/15 transition-all"
+                            className="block w-full text-body pl-12 pr-4 py-4 bg-primary/10 border border-primary/15 rounded-2xl text-text/50 group-focus-within:text-secondary placeholder-secondary/60 focus:outline-none focus:ring-1 focus:ring-accent/85 focus:bg-primary/20 transition-all"
                             placeholder="логин229"
                         />
                     </div>
@@ -50,12 +50,12 @@ export default function LoginPage() {
                     </label>
                     <div className="relative group">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <Lock className="h-5 w-5 text-secondary/60 group-focus-within:text-secondary transition-colors" />
+                            <Lock className="h-5 w-5 text-secondary/50 group-focus-within:text-secondary transition-colors" />
                         </div>
                         <input
                             type="password"
+                            className="block w-full text-body pl-12 pr-4 py-4 bg-primary/10 border border-primary/15 rounded-2xl text-secondary/50 group-focus-within:text-secondary placeholder-secondary/60 focus:outline-none focus:ring-1 focus:ring-accent/85 focus:bg-primary/20 transition-all"
                             required
-                            className="block w-full text-body pl-12 pr-4 py-4 bg-primary/10 border border-primary/15 rounded-2xl text-text/50 group-focus-within:text-secondary placeholder-secondary/60 focus:outline-none focus:ring-1 focus:ring-accent/85 focus:bg-text/15 transition-all"
                             placeholder="••••••••"
                         />
                     </div>

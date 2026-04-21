@@ -16,7 +16,10 @@ export class RuntimeErrorBoundary extends React.Component<Props, State> {
     state: State = { hasError: false };
 
     componentDidMount() {
-        window.addEventListener("unhandledrejection", this.onUnhandledRejection);
+        window.addEventListener(
+            "unhandledrejection",
+            this.onUnhandledRejection,
+        );
         window.addEventListener("error", this.onWindowError);
     }
 
@@ -46,7 +49,8 @@ export class RuntimeErrorBoundary extends React.Component<Props, State> {
                 event.reason instanceof Error
                     ? event.reason.message
                     : String(event.reason),
-            stack: event.reason instanceof Error ? event.reason.stack : undefined,
+            stack:
+                event.reason instanceof Error ? event.reason.stack : undefined,
             context: { source: "unhandledrejection" },
         });
     };
@@ -66,7 +70,7 @@ export class RuntimeErrorBoundary extends React.Component<Props, State> {
                     <PageState
                         variant="error"
                         title="Произошла ошибка интерфейса"
-                        description="Мы уже получили технический отчёт. Обновите страницу и попробуйте снова."
+                        description="Мы работаем над этим. Обновите страницу и попробуйте снова."
                     />
                 </div>
             );

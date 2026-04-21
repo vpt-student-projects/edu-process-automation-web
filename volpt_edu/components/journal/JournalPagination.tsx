@@ -1,4 +1,3 @@
-// components/journal/JournalPagination.tsx
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";

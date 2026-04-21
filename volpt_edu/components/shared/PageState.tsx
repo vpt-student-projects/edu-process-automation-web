@@ -17,7 +17,7 @@ export function PageState({
 }: Props) {
     const tone =
         variant === "error"
-            ? "border-red-400/20 bg-red-500/10 text-red-100"
+            ? "border-red-400/20 bg-red-500/10 text-red-400"
             : "border-primary/20 bg-primary/10 text-text/90";
 
     return (

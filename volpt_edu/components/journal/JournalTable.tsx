@@ -1,4 +1,3 @@
-// components/journal/JournalTable.tsx
 "use client";
 
 import { memo } from "react";

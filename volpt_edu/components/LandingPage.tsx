@@ -1,48 +1,38 @@
 "use client";
 import React, { useState } from "react";
 import GlassCard from "@/components/GlassCard";
-import {
-    ChevronLeft,
-    ChevronRight,
-    BookOpen,
-    Calendar,
-    Users,
-} from "lucide-react";
+import { BookOpen, Calendar, Users } from "lucide-react";
 
-const slides = [
+const features = [
     {
-        icon: <Calendar className="w-8 h-8 text-blue-400 flex-shrink-0" />,
+        icon: <Calendar className="w-5 h-5 text-blue-400" />,
+        iconBg: "bg-blue-50",
         title: "Просмотр расписания",
-        desc: "Отслеживайте своё расписание пар.",
+        desc: "Отслеживайте расписание пар — фильтруйте по дате и дисциплине.",
     },
     {
-        icon: <Users className="w-8 h-8 text-pink-400 flex-shrink-0" />,
+        icon: <Users className="w-5 h-5 text-pink-400" />,
+        iconBg: "bg-pink-50",
         title: "Ведение журнала",
-        desc: "Ведите учёт успеваемости и посещаемости студентов.",
+        desc: "Учёт посещаемости и успеваемости студентов в удобном формате.",
     },
     {
-        icon: <BookOpen className="w-8 h-8 text-purple-400 flex-shrink-0" />,
+        icon: <BookOpen className="w-5 h-5 text-purple-400" />,
+        iconBg: "bg-purple-50",
         title: "Интерактивные группы",
-        desc: "Отслеживайте свои группы.",
+        desc: "Полная информация по группам, составу и учебным планам.",
     },
 ];
 
 export default function LandingPage() {
-    const [activeSlide, setActiveSlide] = useState(0);
-
-    const prev = () =>
-        setActiveSlide((s) => (s - 1 + slides.length) % slides.length);
-    const next = () => setActiveSlide((s) => (s + 1) % slides.length);
     return (
-        <div className="p-6 w-full h-full flex flex-col gap-4">
+        <div className="p-6 w-full flex flex-col gap-5 flex-1 min-h-full">
             {/* Шапка */}
             <div className="flex items-center text-left space-x-4">
                 <svg
-                    width="120"
-                    height="65"
+                    className="w-[120px] md:w-[100px] sm:w-[80px] h-auto flex-shrink-0"
                     viewBox="0 0 88 32"
                     fill="none"
-                    shadow-2x1="true"
                     xmlns="http://www.w3.org/2000/svg"
                 >
                     <path
@@ -81,94 +71,61 @@ export default function LandingPage() {
                         strokeWidth="2"
                     />
                 </svg>
-                <div className="flex-row">
-                    <p className="text-primary text-caption tracking-tight ">
+                <div>
+                    <p className="text-text/40 text-caption tracking-tight ">
                         Государственное бюджетное профессиональное
                         образовательное учреждение «Волжский политехнический
                         техникум»
                     </p>
-                    <h1 className="text-text text-h2 tracking-tight drop-shadow-md">
+                    <h1 className="text-text text-h3 tracking-tight drop-shadow-md">
                         Электронное образование
                     </h1>
                 </div>
             </div>
-            <p className="text-text text-body">
-                Цифровая платформа для работы с учебными группами, дисциплинами
-                и расписанием.
-            </p>
+            <GlassCard
+                className="p-5 relative overflow-hidden"
+                intensity="high"
+            >
+                <p className="text-caption text-accent uppercase tracking-widest mb-1">
+                    Цифровая платформа
+                </p>
+                <p className="text-body text-text leading-relaxed max-w-xs">
+                    Работа с учебными группами, дисциплинами и расписанием — в
+                    одном месте.
+                </p>
+            </GlassCard>
 
             {/* Карточки */}
-            <div className="flex flex-col flex-1">
-                <div className="relative overflow-hidden flex-1">
-                    <div
-                        className="flex h-full transition-transform duration-300 ease-in-out"
-                        style={{
-                            transform: `translateX(-${activeSlide * 100}%)`,
-                        }}
+            <div className="flex flex-col gap-3">
+                <p className="text-caption text-accent px-2 uppercase tracking-widest ml-1">
+                    Возможности
+                </p>
+                {features.map((f, i) => (
+                    <GlassCard
+                        key={i}
+                        className="p-4 flex items-start gap-4"
+                        intensity="low"
                     >
-                        {slides.map((slide, i) => (
+                        <div className="flex flex-row items-center gap-4">
                             <div
-                                key={i}
-                                className="w-full flex-shrink-0 h-full"
+                                className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${f.iconBg}`}
                             >
-                                <div className="px-8 pb-1 h-full box-border">
-                                    <GlassCard className="p-6 h-full ">
-                                        <div className="flex flex-col items-stretch gap-1 h-full">
-                                            <div className="flex flex-row gap-3 flex-shrink-0 self-start">
-                                                {/*Заголовок*/}
-                                                {slide.icon}
-                                                <div className="flex flex-col h-full w-full">
-                                                    <h3 className=" text-text text-h4 leading-tight">
-                                                        {slide.title}
-                                                    </h3>
-                                                    <p className="text-body-sm text-text leading-snug">
-                                                        {slide.desc}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div className="flex flex-col  h-full w-full flex-1 mt-2">
-                                                <div className="w-full h-full bg-black/10 rounded-lg flex items-center justify-center">
-                                                    GIF / IMAGE
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </GlassCard>
-                                </div>
+                                {f.icon}
                             </div>
-                        ))}
-                    </div>
-
-                    {/* Стрелки */}
-                    <button
-                        onClick={prev}
-                        className="absolute -left-2 top-1/2 -translate-y-1/2 "
-                    >
-                        <ChevronLeft className="text-primary/30 w-8 h-8 hover:text-primary/80 transition" />
-                    </button>
-                    <button
-                        onClick={next}
-                        className="absolute -right-2 top-1/2 -translate-y-1/2"
-                    >
-                        <ChevronRight className="text-primary/30 w-8 h-8 hover:text-primary/80 transition" />
-                    </button>
-                </div>
-                {/* Точки */}
-                <div className="flex justify-center py-1 gap-2 mt-3">
-                    {slides.map((_, i) => (
-                        <button
-                            key={i}
-                            onClick={() => setActiveSlide(i)}
-                            className={`h-2 rounded-full transition-all duration-300 ${
-                                i === activeSlide
-                                    ? "bg-accent w-4"
-                                    : "bg-primary/30 w-2"
-                            }`}
-                        />
-                    ))}
-                </div>
+                            <div>
+                                <h3 className="text-body font-medium text-text leading-tight">
+                                    {f.title}
+                                </h3>
+                                <p className="text-body-sm text-text/55 leading-snug mt-0.5">
+                                    {f.desc}
+                                </p>
+                            </div>
+                        </div>
+                    </GlassCard>
+                ))}
             </div>
 
-            <p className="text-center text-caption text-text/30 uppercase tracking-widest">
+            <p className="mt-auto text-center text-caption text-text/30 uppercase tracking-widest">
                 Версия v1.0
             </p>
         </div>

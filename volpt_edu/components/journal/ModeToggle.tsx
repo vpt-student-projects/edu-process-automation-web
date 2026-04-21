@@ -1,4 +1,3 @@
-// components/journal/ModeToggle.tsx
 "use client";
 
 import { GraduationCap, Users } from "lucide-react";

@@ -7,6 +7,9 @@ import { RuntimeErrorBoundary } from "@/components/RuntimeErrorBoundary";
 export const metadata: Metadata = {
     title: "ВПТ: Образование",
     description: "Цифровое управление образованием",
+    icons: {
+        icon: "/favicon.png",
+    },
 };
 
 export default function RootLayout({
@@ -19,7 +22,9 @@ export default function RootLayout({
             <body className="font-sans antialiased min-h-screen relative">
                 {/*<Background />*/}
                 <RuntimeErrorBoundary>
-                    <main className="relative z-10 min-h-screen">{children}</main>
+                    <main className="relative z-10 min-h-screen">
+                        {children}
+                    </main>
                 </RuntimeErrorBoundary>
                 <Navbar />
             </body>
