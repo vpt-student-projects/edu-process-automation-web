@@ -11,14 +11,10 @@ import { loginUser } from "@/lib/services/auth";
 export default function LoginPage() {
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
-    const [apiBaseUrl, setApiBaseUrl] = useState("");
+    const [apiBaseUrl, setApiBaseUrl] = useState(() => getStoredApiBaseUrl());
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
-
-    useEffect(() => {
-        setApiBaseUrl(getStoredApiBaseUrl());
-    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
