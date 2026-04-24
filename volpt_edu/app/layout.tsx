@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { RuntimeErrorBoundary } from "@/components/RuntimeErrorBoundary";
+import Background from "@/components/Background";
 
 export const metadata: Metadata = {
     title: "ВПТ: Образование",
@@ -20,7 +21,7 @@ export default function RootLayout({
     return (
         <html lang="ru">
             <body className="font-sans antialiased min-h-screen relative">
-                {/*<Background />*/}
+                <Background />
                 <RuntimeErrorBoundary>
                     <main className="relative z-10 min-h-screen">
                         {children}

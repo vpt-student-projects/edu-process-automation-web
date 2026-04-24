@@ -5,20 +5,29 @@ import { BookOpen, Calendar, Users } from "lucide-react";
 
 const features = [
     {
-        icon: <Calendar className="w-5 h-5 text-blue-400" />,
+        icon: (
+            <Calendar className="w-5 h-5 text-blue-400 transition-transform duration-300 group-hover:scale-110" />
+        ),
         iconBg: "bg-blue-50",
+        glow: "hover:shadow-[0_0_8px_2px_rgba(96,165,250,0.35)]",
         title: "Просмотр расписания",
         desc: "Отслеживайте расписание пар — фильтруйте по дате и дисциплине.",
     },
     {
-        icon: <Users className="w-5 h-5 text-pink-400" />,
+        icon: (
+            <Users className="w-5 h-5 text-pink-400 transition-transform duration-300 group-hover:scale-110" />
+        ),
         iconBg: "bg-pink-50",
+        glow: "hover:shadow-[0_0_8px_2px_rgba(244,114,182,0.35)]",
         title: "Ведение журнала",
         desc: "Учёт посещаемости и успеваемости студентов в удобном формате.",
     },
     {
-        icon: <BookOpen className="w-5 h-5 text-purple-400" />,
+        icon: (
+            <BookOpen className="w-5 h-5 text-purple-400 transition-transform duration-300 group-hover:scale-110" />
+        ),
         iconBg: "bg-purple-50",
+        glow: "hover:shadow-[0_0_8px_2px_rgba(192,132,252,0.35)]",
         title: "Интерактивные группы",
         desc: "Полная информация по группам, составу и учебным планам.",
     },
@@ -72,7 +81,7 @@ export default function LandingPage() {
                     />
                 </svg>
                 <div>
-                    <p className="text-text/40 text-caption tracking-tight ">
+                    <p className="text-text/40 text-caption tracking-tight">
                         Государственное бюджетное профессиональное
                         образовательное учреждение «Волжский политехнический
                         техникум»
@@ -84,9 +93,9 @@ export default function LandingPage() {
             </div>
             <GlassCard className="p-5 relative overflow-hidden" intensity="low">
                 {/* Декоративный кружок */}
-                <div className="absolute -bottom-20 -right-10 w-44 h-44 rounded-full bg-accent/10 " />
-                <div className="absolute -bottom-4 -right-2 w-24 h-24 rounded-full bg-accent/20 " />
-                <div className="absolute bottom-5 right-4 w-10 h-10 rounded-full bg-accent/30 " />
+                <div className="absolute -bottom-20 -right-10 w-44 h-44 rounded-full bg-accent/10" />
+                <div className="absolute -bottom-4 -right-2 w-24 h-24 rounded-full bg-accent/20" />
+                <div className="absolute bottom-5 right-4 w-10 h-10 rounded-full bg-accent/30" />
                 <p className="text-caption text-accent uppercase tracking-widest mb-1">
                     Цифровая платформа
                 </p>
@@ -104,16 +113,23 @@ export default function LandingPage() {
                 {features.map((f, i) => (
                     <GlassCard
                         key={i}
-                        className="p-4 flex items-start gap-4"
+                        className={`group p-4 flex items-start gap-4
+                                cursor-default select-none
+                                transition-all duration-400 ease-in-out
+                                ${f.glow}
+                                `}
                         intensity="low"
                     >
-                        <div className="flex flex-row items-center gap-4">
+                        <div className="flex flex-row items-center gap-4 w-full">
                             <div
-                                className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${f.iconBg}`}
+                                className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0
+                                            transition-all duration-300
+                                            ${f.iconBg}
+                                            `}
                             >
                                 {f.icon}
                             </div>
-                            <div>
+                            <div className="transition-transform duration-300 ease-out group-hover:translate-x-0.5">
                                 <h3 className="text-body font-medium text-text leading-tight">
                                     {f.title}
                                 </h3>

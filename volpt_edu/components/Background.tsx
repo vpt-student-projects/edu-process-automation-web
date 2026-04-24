@@ -13,56 +13,61 @@ const fragmentShaderSource = `
     precision mediump float;
     uniform vec2 iResolution;
     uniform float iTime;
-    uniform float uSpeed;
-    uniform float uDensity;
-    uniform float uPointSize;
 
-    // Pseudo-random function
-    float random(vec2 st) {
-      return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
-    }
+    float grid(vec2 uv, float size) {
+        vec2 g = abs(fract(uv * size) - 0.5);
+        float line = min(g.x, g.y);
+        return 1.0 - smoothstep(0.0, 0.015, line);
+      }
 
     void main() {
-      // Coordinate normalization
-      vec2 uv = gl_FragCoord.xy / iResolution.y;
+         vec2 uv = gl_FragCoord.xy / iResolution.xy;
+         float aspect = iResolution.x / iResolution.y;
+         vec2 suv = vec2(uv.x * aspect, uv.y);
+         // Светлый фон: почти белый с чуть голубоватым оттенком
+        vec3 bg = vec3(0.921, 0.937, 0.957);
 
-      // Theme Adaptation: Dark Mode
-      // Background: Dark Slate (#0f172a)
-      vec3 bgColor = vec3(0.922, 0.937, 0.957);
+        // Мелкая сетка — очень тонкая, едва заметная
+        float smallGrid = grid(suv, 30.0) * 0.09;
 
-      // Point Color: Soft Blue-Grey
-      vec3 pointColor = vec3(0.24, 0.31, 0.38);
+        // Крупная сетка — чуть заметнее
+        float gridSize = 10.0;
+        float largeGrid = grid(suv, gridSize) * 0.15;
 
-      // Grid Logic
-      vec2 gridUv = uv * uDensity;
-      vec2 ipos = floor(gridUv); // Cell ID
-      vec2 fpos = fract(gridUv); // Intra-cell coordinates
+        // Медленное плавное мерцание крупной сетки
+        float pulse = sin(iTime * 2.0) * 0.5 + 0.5;
+        largeGrid *= 0.85 + pulse * 0.08;
 
-      // Flicker Animation
-      float t = iTime * uSpeed;
-      float blink = sin(t + random(ipos) * 6.28) * 0.5 + 0.5;
+        // Узлы на пересечениях крупной сетки
+        vec2 nodeUv = fract(suv * gridSize) - 0.5;
+        float nodeDist = length(nodeUv);
+        float nodePulse = sin(iTime * 2.0 + floor(suv.x * gridSize) * 5.0 + floor(suv.y * gridSize) * 2.1) * 0.5 + 0.5;
+        float node = smoothstep(0.07, 0.04, nodeDist) * nodePulse * 0.18;
 
-      // Draw Circle in center of cell
-      float dist = distance(fpos, vec2(0.5));
+        // Диагональный мягкий свет сверху-слева
+        float vignette = 1.0 - smoothstep(0.3, 1.2, length(uv - vec2(0.2, 0.85)));
+        float glow = vignette * 0.01;
 
-      // Soft edge circle
-      float mask = smoothstep(uPointSize, uPointSize - 0.05, dist);
+        // Аккент: очень лёгкий синеватый тон в верхнем углу
+        vec3 accentColor = vec3(0.78, 0.87, 0.98);
+        float accentStrength = smoothstep(1.0, 0.0, length(uv - vec2(0.0, 1.0)) * 1.6) * 0.08;
 
-      // Apply blink to the mask
-      mask *= blink * 0.6;
+        vec3 gridColor = vec3(0.62, 0.67, 0.76);
+        vec3 nodeColor = vec3(0.45, 0.55, 0.72);
 
-      vec3 finalCol = mix(bgColor, pointColor, mask);
+        vec3 col = bg;
+        col = mix(col, accentColor, accentStrength);
+        col = mix(col, gridColor, smallGrid + largeGrid);
+        col = mix(col, nodeColor, node);
+        col += glow * 0.5;
 
-      gl_FragColor = vec4(finalCol, 1.0);
+        gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
     }
-  `;
+   `;
 const Background: React.FC = () => {
     type UniformLocations = {
         iResolution: WebGLUniformLocation | null;
         iTime: WebGLUniformLocation | null;
-        uSpeed: WebGLUniformLocation | null;
-        uDensity: WebGLUniformLocation | null;
-        uPointSize: WebGLUniformLocation | null;
     };
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -73,15 +78,7 @@ const Background: React.FC = () => {
     const uniformLocationsRef = useRef<UniformLocations>({
         iResolution: null,
         iTime: null,
-        uSpeed: null,
-        uDensity: null,
-        uPointSize: null,
     });
-
-    // Config defaults adapted from user's specifications
-    const speed = 4;
-    const density = 50.0;
-    const pointSize = 0.08;
 
     useEffect(() => {
         startTimeRef.current = Date.now();
@@ -113,7 +110,6 @@ const Background: React.FC = () => {
 
         const vs = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
         const fs = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
-
         if (!vs || !fs) return;
 
         const program = gl.createProgram();
@@ -140,9 +136,6 @@ const Background: React.FC = () => {
         uniformLocationsRef.current = {
             iResolution: gl.getUniformLocation(program, "iResolution"),
             iTime: gl.getUniformLocation(program, "iTime"),
-            uSpeed: gl.getUniformLocation(program, "uSpeed"),
-            uDensity: gl.getUniformLocation(program, "uDensity"),
-            uPointSize: gl.getUniformLocation(program, "uPointSize"),
         };
 
         const handleResize = () => {
@@ -162,9 +155,6 @@ const Background: React.FC = () => {
 
             gl.uniform2f(uniforms.iResolution, canvas.width, canvas.height);
             gl.uniform1f(uniforms.iTime, time);
-            gl.uniform1f(uniforms.uSpeed, speed);
-            gl.uniform1f(uniforms.uDensity, density);
-            gl.uniform1f(uniforms.uPointSize, pointSize);
 
             gl.drawArrays(gl.TRIANGLES, 0, 6);
             animationFrameRef.current = requestAnimationFrame(render);
@@ -179,7 +169,7 @@ const Background: React.FC = () => {
     }, []);
 
     return (
-        <div className="fixed inset-0 z-[-1] w-full h-full bg-[#0f172a]">
+        <div className="fixed inset-0 z-[-1] w-full h-full bg-[#ebeff4]">
             <canvas ref={canvasRef} className="block w-full h-full" />
         </div>
     );

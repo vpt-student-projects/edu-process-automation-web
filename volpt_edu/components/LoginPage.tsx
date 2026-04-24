@@ -67,7 +67,7 @@ export default function LoginPage() {
                             value={login}
                             onChange={(event) => setLogin(event.target.value)}
                             required
-                            className="block w-full text-body pl-12 pr-4 py-4 bg-primary/10 border border-primary/15 rounded-2xl text-text/50 group-focus-within:text-secondary placeholder-secondary/60 focus:outline-none focus:ring-1 focus:ring-accent/85 focus:bg-primary/20 transition-all"
+                            className="block w-full text-body pl-12 pr-4 py-4 bg-primary/10 border border-primary/15 rounded-2xl text-text/50 group-focus-within:text-secondary placeholder-secondary/60 focus:outline-none focus:ring-1 focus:ring-accent/85 focus:bg-primary/15 transition-all"
                             placeholder="логин229"
                         />
                     </div>
@@ -84,8 +84,10 @@ export default function LoginPage() {
                         <input
                             type="password"
                             value={password}
-                            onChange={(event) => setPassword(event.target.value)}
-                            className="block w-full text-body pl-12 pr-4 py-4 bg-primary/10 border border-primary/15 rounded-2xl text-secondary/50 group-focus-within:text-secondary placeholder-secondary/60 focus:outline-none focus:ring-1 focus:ring-accent/85 focus:bg-primary/20 transition-all"
+                            onChange={(event) =>
+                                setPassword(event.target.value)
+                            }
+                            className="block w-full text-body pl-12 pr-4 py-4 bg-primary/10 border border-primary/15 rounded-2xl text-secondary/50 group-focus-within:text-secondary placeholder-secondary/60 focus:outline-none focus:ring-1 focus:ring-accent/85 focus:bg-primary/15 transition-all"
                             required
                             placeholder="••••••••"
                         />
@@ -105,7 +107,8 @@ export default function LoginPage() {
                         placeholder="http://192.168.0.10:5000"
                     />
                     <p className="text-caption text-text/55 px-2">
-                        Адрес API сохраняется в браузере, поэтому IP можно менять без правок в коде.
+                        Адрес API сохраняется в браузере, поэтому IP можно
+                        менять без правок в коде.
                     </p>
                 </div>
 

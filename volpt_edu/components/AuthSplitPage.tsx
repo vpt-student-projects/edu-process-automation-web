@@ -20,7 +20,7 @@ export default function AuthSplitPage() {
                 <section className="w-2/3 min-h-screen flex border-r border-primary/10">
                     <LandingPage />
                 </section>
-                <section className="w-1/3 min-h-screen flex justify-center p-12">
+                <section className="w-1/3 min-h-screen flex justify-center p-12 bg-background/85">
                     <LoginPage />
                 </section>
             </main>
