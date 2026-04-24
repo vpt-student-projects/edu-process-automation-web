@@ -1,20 +1,20 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Lock, User } from "lucide-react";
 import LiquidButton from "@/components/LiquidButton";
-import { getStoredApiBaseUrl, saveApiBaseUrl } from "@/lib/config/api";
+import { getStoredApiBaseUrl } from "@/lib/config/api";
 import { saveAuthSession } from "@/lib/auth/session";
 import { loginUser } from "@/lib/services/auth";
 
 export default function LoginPage() {
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
-    const [apiBaseUrl, setApiBaseUrl] = useState(() => getStoredApiBaseUrl());
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
+    const apiBaseUrl = getStoredApiBaseUrl();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -28,29 +28,30 @@ export default function LoginPage() {
                 password,
             });
 
-            saveApiBaseUrl(apiBaseUrl);
             saveAuthSession(session);
             router.push("/schedule");
         } catch (err) {
             if (err instanceof Error && err.message === "INVALID_CREDENTIALS") {
-                setError("Неверный логин или пароль");
+                setError("РќРµРІРµСЂРЅС‹Р№ Р»РѕРіРёРЅ РёР»Рё РїР°СЂРѕР»СЊ");
             } else {
-                setError("Не удалось выполнить вход.");
+                setError("РќРµ СѓРґР°Р»РѕСЃСЊ РІС‹РїРѕР»РЅРёС‚СЊ РІС…РѕРґ.");
             }
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <div className="h-full flex flex-col justify-center">
             <div className="text-center mb-8">
-                <h2 className="text-text text-h3 mb-2">Добро пожаловать!</h2>
-                <p className="text-text/85 text-body">Введите свои данные</p>
+                <h2 className="text-text text-h3 mb-2">Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ!</h2>
+                <p className="text-text/85 text-body">Р’РІРµРґРёС‚Рµ СЃРІРѕРё РґР°РЅРЅС‹Рµ</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-1">
                     <label className="text-body-sm font-medium text-primary/65 uppercase tracking-wider ml-2">
-                        Логин
+                        Р›РѕРіРёРЅ
                     </label>
                     <div className="relative group">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -62,14 +63,14 @@ export default function LoginPage() {
                             onChange={(event) => setLogin(event.target.value)}
                             required
                             className="block w-full text-body pl-12 pr-4 py-4 bg-primary/10 border border-primary/15 rounded-2xl text-text/50 group-focus-within:text-secondary placeholder-secondary/60 focus:outline-none focus:ring-1 focus:ring-accent/85 focus:bg-primary/15 transition-all"
-                            placeholder="логин229"
+                            placeholder="Р»РѕРіРёРЅ229"
                         />
                     </div>
                 </div>
 
                 <div className="space-y-1">
                     <label className="text-body-sm font-medium text-primary/65 uppercase tracking-wider ml-2">
-                        Пароль
+                        РџР°СЂРѕР»СЊ
                     </label>
                     <div className="relative group">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -83,7 +84,7 @@ export default function LoginPage() {
                             }
                             className="block w-full text-body pl-12 pr-4 py-4 bg-primary/10 border border-primary/15 rounded-2xl text-secondary/50 group-focus-within:text-secondary placeholder-secondary/60 focus:outline-none focus:ring-1 focus:ring-accent/85 focus:bg-primary/15 transition-all"
                             required
-                            placeholder="••••••••"
+                            placeholder="вЂўвЂўвЂўвЂўвЂўвЂўвЂўвЂў"
                         />
                     </div>
                 </div>
@@ -108,7 +109,7 @@ export default function LoginPage() {
                         fullWidth
                         disabled={loading}
                     >
-                        {loading ? "Аутентификация..." : "Войти"}
+                        {loading ? "РђСѓС‚РµРЅС‚РёС„РёРєР°С†РёСЏ..." : "Р’РѕР№С‚Рё"}
                     </LiquidButton>
                 </div>
             </form>
