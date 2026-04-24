@@ -35,14 +35,12 @@ export default function LoginPage() {
             saveApiBaseUrl(apiBaseUrl);
             saveAuthSession(session);
             router.push("/schedule");
-        } catch (requestError) {
-            setError(
-                requestError instanceof Error
-                    ? requestError.message
-                    : "Не удалось выполнить вход.",
-            );
-        } finally {
-            setLoading(false);
+        } catch (err) {
+            if (err instanceof Error && err.message === "INVALID_CREDENTIALS") {
+                setError("Неверный логин или пароль");
+            } else {
+                setError("Не удалось выполнить вход.");
+            }
         }
     };
 
@@ -93,6 +91,19 @@ export default function LoginPage() {
                         />
                     </div>
                 </div>
+
+                {error ? (
+                    <div
+                        className="
+                            rounded-2xl border border-red-400/25 bg-red-500/10
+                            px-4 py-3 text-body-sm text-red-400
+
+                            animate-in fade-in slide-in-from-top-1 duration-300
+                        "
+                    >
+                        {error}
+                    </div>
+                ) : null}
 
                 <div className="pt-4">
                     <LiquidButton
