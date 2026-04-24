@@ -94,30 +94,6 @@ export default function LoginPage() {
                     </div>
                 </div>
 
-                <div className="space-y-1">
-                    <label className="text-body-sm font-medium text-primary/65 uppercase tracking-wider ml-2">
-                        API URL
-                    </label>
-                    <input
-                        type="url"
-                        value={apiBaseUrl}
-                        onChange={(event) => setApiBaseUrl(event.target.value)}
-                        required
-                        className="block w-full text-body px-4 py-4 bg-primary/10 border border-primary/15 rounded-2xl text-text/70 placeholder-secondary/60 focus:outline-none focus:ring-1 focus:ring-accent/85 focus:bg-primary/20 transition-all"
-                        placeholder="http://192.168.0.10:5000"
-                    />
-                    <p className="text-caption text-text/55 px-2">
-                        Адрес API сохраняется в браузере, поэтому IP можно
-                        менять без правок в коде.
-                    </p>
-                </div>
-
-                {error ? (
-                    <div className="rounded-2xl border border-red-400/25 bg-red-500/10 px-4 py-3 text-body-sm text-red-100">
-                        {error}
-                    </div>
-                ) : null}
-
                 <div className="pt-4">
                     <LiquidButton
                         className="shadow-lg text-body"
