@@ -1,17 +1,25 @@
 "use client";
 
 import { ChevronRight } from "lucide-react";
-import { MOCK_GROUPS, ALL_SUBJECTS } from "@/constants";
+
+interface Option {
+    value: string;
+    label: string;
+}
 
 interface Props {
     selectedGroup: string;
     selectedSubject: string;
+    groups: ReadonlyArray<Option>;
+    subjects: ReadonlyArray<Option>;
     onChange: (group: string, subject: string) => void;
 }
 
 export function JournalFilters({
     selectedGroup,
     selectedSubject,
+    groups,
+    subjects,
     onChange,
 }: Props) {
     return (
@@ -23,14 +31,12 @@ export function JournalFilters({
                 <div className="relative">
                     <select
                         value={selectedGroup}
-                        onChange={(e) =>
-                            onChange(e.target.value, selectedSubject)
-                        }
+                        onChange={(e) => onChange(e.target.value, selectedSubject)}
                         className="w-full sm:w-48 appearance-none bg-primary/5 hover:bg-secondary/15 border border-primary/10 rounded-full px-4 py-2.5 pr-9 outline-none focus:ring-1 focus:ring-accent/85 hover:border-accent/85 transition-colors cursor-pointer text-sm"
                     >
-                        {MOCK_GROUPS.map((g) => (
-                            <option key={g.id} value={g.name}>
-                                {g.name}
+                        {groups.map((group) => (
+                            <option key={group.value} value={group.value}>
+                                {group.label}
                             </option>
                         ))}
                     </select>
@@ -45,14 +51,12 @@ export function JournalFilters({
                 <div className="relative">
                     <select
                         value={selectedSubject}
-                        onChange={(e) =>
-                            onChange(selectedGroup, e.target.value)
-                        }
+                        onChange={(e) => onChange(selectedGroup, e.target.value)}
                         className="w-full sm:w-64 appearance-none bg-primary/5 hover:bg-secondary/15 border border-primary/10 rounded-full px-4 py-2.5 pr-9 outline-none focus:ring-1 focus:ring-accent/85 hover:border-accent/85 transition-colors cursor-pointer text-sm"
                     >
-                        {ALL_SUBJECTS.map((s) => (
-                            <option key={s} value={s}>
-                                {s}
+                        {subjects.map((subject) => (
+                            <option key={subject.value} value={subject.value}>
+                                {subject.label}
                             </option>
                         ))}
                     </select>

@@ -1,5 +1,10 @@
-// types/journal.ts
-export type AttendanceStatus = null | "НБ" | "ОП" | "УВ" | "ОТ";
+export type AttendanceStatus =
+    | null
+    | "НБ"
+    | "ОП"
+    | "УВ"
+    | "УШ"
+    | "ОТ";
 export type Grade = 2 | 3 | 4 | 5 | null;
 export type GradesState = Record<string, Record<number, Grade>>;
 export type AttendanceState = Record<string, Record<number, AttendanceStatus>>;
@@ -9,6 +14,7 @@ export const ATTENDANCE_CYCLE: AttendanceStatus[] = [
     "НБ",
     "ОП",
     "УВ",
+    "УШ",
     "ОТ",
 ];
 
@@ -34,6 +40,8 @@ export function statusStyle(s: AttendanceStatus): string {
             return "text-orange-400 bg-orange-500/15 border-orange-500/30";
         case "УВ":
             return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+        case "УШ":
+            return "bg-amber-500/20 text-amber-300 border-amber-500/30";
         case "ОТ":
             return "bg-purple-500/20 text-purple-400 border-purple-500/30";
         default:

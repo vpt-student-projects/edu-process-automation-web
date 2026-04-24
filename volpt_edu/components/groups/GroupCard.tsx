@@ -33,21 +33,29 @@ function GroupCardComponent({ group }: Props) {
                 <p className="text-caption text-text/60 uppercase tracking-wider pl-1.5 mb-3 mt-4">
                     Список предметов
                 </p>
-                <div className="grid gap-3">
-                    {group.subjects.map((sub) => (
-                        <Link
-                            key={sub}
-                            href={buildJournalHref({
-                                group: group.name,
-                                subject: sub,
-                            })}
-                            className="flex items-center gap-2 p-3 rounded-xl bg-primary/10 border border-primary/5 hover:bg-accent/15 hover:border-accent/30 transition-colors"
-                        >
-                            <Book className="w-4 h-4 text-secondary/85" />
-                            <span className="text-text text-h6">{sub}</span>
-                        </Link>
-                    ))}
-                </div>
+                {group.subjects.length > 0 ? (
+                    <div className="grid gap-3">
+                        {group.subjects.map((sub) => (
+                            <Link
+                                key={sub}
+                                href={buildJournalHref({
+                                    group: group.name,
+                                    subject: sub,
+                                })}
+                                className="flex items-center gap-2 p-3 rounded-xl bg-primary/10 border border-primary/5 hover:bg-accent/15 hover:border-accent/30 transition-colors"
+                            >
+                                <Book className="w-4 h-4 text-secondary/85" />
+                                <span className="text-text text-h6">{sub}</span>
+                            </Link>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="rounded-xl border border-primary/10 bg-primary/5 px-4 py-3 text-body-sm text-text/65">
+                        Предметы для этой группы пока не приходят из API. На этом
+                        этапе мы уже подключили реальные группы, а предметы
+                        подтянем следующим шагом.
+                    </div>
+                )}
             </div>
         </GlassCard>
     );

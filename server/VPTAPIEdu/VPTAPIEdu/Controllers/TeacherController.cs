@@ -1,4 +1,4 @@
-﻿namespace VPTAPIEdu.Controllers
+namespace VPTAPIEdu.Controllers
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -25,7 +25,6 @@
             return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
         }
 
-        // GET: api/teacher/lessons/my
         [HttpGet("lessons/my")]
         public async Task<IActionResult> GetMyLessons([FromQuery] DateOnly? from, [FromQuery] DateOnly? to)
         {
@@ -58,7 +57,165 @@
             return Ok(lessons);
         }
 
-        // GET: api/teacher/lessons/{id}/students
+        [HttpGet("journal/filters")]
+        public async Task<IActionResult> GetJournalFilters()
+        {
+            var userId = GetCurrentUserId();
+
+            var links = await _context.UserGroupSubjects
+                .Where(ugs => ugs.UserId == userId)
+                .Include(ugs => ugs.Group)
+                .Include(ugs => ugs.Subject)
+                .ToListAsync();
+
+            var groups = links
+                .Where(ugs => ugs.Group != null)
+                .GroupBy(ugs => new { ugs.GroupId, GroupName = ugs.Group!.Name })
+                .Select(group => new JournalGroupFilterDto
+                {
+                    GroupId = group.Key.GroupId,
+                    GroupName = group.Key.GroupName,
+                    Subjects = group
+                        .Where(item => item.Subject != null)
+                        .GroupBy(item => new { item.SubjectId, SubjectName = item.Subject!.Name })
+                        .Select(subject => new JournalSubjectFilterDto
+                        {
+                            SubjectId = subject.Key.SubjectId,
+                            SubjectName = subject.Key.SubjectName
+                        })
+                        .OrderBy(subject => subject.SubjectName)
+                        .ToList()
+                })
+                .OrderBy(group => group.GroupName)
+                .ToList();
+
+            var attendanceTypes = await _context.AttendanceTypes
+                .OrderBy(t => t.Id)
+                .Select(t => new JournalAttendanceTypeDto
+                {
+                    Id = t.Id,
+                    Name = t.Name
+                })
+                .ToListAsync();
+
+            return Ok(new JournalFiltersResponseDto
+            {
+                Groups = groups,
+                AttendanceTypes = attendanceTypes
+            });
+        }
+
+        [HttpGet("journal")]
+        public async Task<IActionResult> GetJournalData(
+            [FromQuery] int groupId,
+            [FromQuery] int subjectId,
+            [FromQuery] DateOnly? from,
+            [FromQuery] DateOnly? to)
+        {
+            var userId = GetCurrentUserId();
+
+            var hasAccess = await _context.UserGroupSubjects
+                .AnyAsync(ugs =>
+                    ugs.UserId == userId &&
+                    ugs.GroupId == groupId &&
+                    ugs.SubjectId == subjectId);
+
+            if (!hasAccess)
+                return Forbid();
+
+            var dateFrom = from ?? DateOnly.FromDateTime(DateTime.Today.AddMonths(-3));
+            var dateTo = to ?? DateOnly.FromDateTime(DateTime.Today.AddMonths(1));
+
+            var lessons = await _context.Lessons
+                .Where(l =>
+                    l.UserId == userId &&
+                    l.GroupId == groupId &&
+                    l.SubjectId == subjectId &&
+                    l.Date >= dateFrom &&
+                    l.Date <= dateTo)
+                .OrderBy(l => l.Date)
+                .ThenBy(l => l.Number)
+                .Select(l => new JournalLessonItemDto
+                {
+                    LessonId = l.Id,
+                    Date = l.Date,
+                    Number = l.Number
+                })
+                .ToListAsync();
+
+            var students = await _context.Students
+                .Where(s => s.GroupId == groupId)
+                .OrderBy(s => s.FullName)
+                .Select(s => new { s.Id, s.FullName })
+                .ToListAsync();
+
+            var studentIds = students.Select(s => s.Id).ToList();
+            var lessonIds = lessons.Select(l => l.LessonId).ToList();
+
+            var grades = await _context.Grades
+                .Where(g =>
+                    studentIds.Contains(g.StudentId) &&
+                    g.SubjectId == subjectId &&
+                    g.Date.HasValue &&
+                    g.Date.Value >= dateFrom &&
+                    g.Date.Value <= dateTo)
+                .Select(g => new
+                {
+                    g.StudentId,
+                    Date = g.Date!.Value,
+                    Grade = g.GradeValue
+                })
+                .ToListAsync();
+
+            var attendances = await _context.Attendances
+                .Where(a => lessonIds.Contains(a.LessonId) && studentIds.Contains(a.StudentId))
+                .Include(a => a.Type)
+                .Include(a => a.Lesson)
+                .Select(a => new
+                {
+                    a.StudentId,
+                    a.LessonId,
+                    Date = a.Lesson != null ? a.Lesson.Date : (DateOnly?)null,
+                    a.TypeId,
+                    TypeName = a.Type != null ? a.Type.Name : null
+                })
+                .ToListAsync();
+
+            var response = new JournalDataResponseDto
+            {
+                GroupId = groupId,
+                SubjectId = subjectId,
+                Lessons = lessons,
+                Students = students.Select(student => new JournalStudentItemDto
+                {
+                    Id = student.Id,
+                    FullName = student.FullName,
+                    Grades = grades
+                        .Where(g => g.StudentId == student.Id)
+                        .Select(g => new JournalGradeItemDto
+                        {
+                            Date = g.Date,
+                            Grade = g.Grade
+                        })
+                        .OrderBy(g => g.Date)
+                        .ToList(),
+                    Attendances = attendances
+                        .Where(a => a.StudentId == student.Id && a.Date.HasValue)
+                        .Select(a => new JournalAttendanceItemDto
+                        {
+                            LessonId = a.LessonId,
+                            Date = a.Date!.Value,
+                            AttendanceTypeId = a.TypeId,
+                            AttendanceTypeName = a.TypeName
+                        })
+                        .OrderBy(a => a.Date)
+                        .ToList()
+                }).ToList()
+            };
+
+            return Ok(response);
+        }
+
         [HttpGet("lessons/{id}/students")]
         public async Task<IActionResult> GetLessonStudents(int id)
         {
@@ -89,16 +246,45 @@
             return Ok(students);
         }
 
-        // POST: api/teacher/grades
         [HttpPost("grades")]
         public async Task<IActionResult> CreateGrade([FromBody] CreateGradeDto dto)
         {
+            if (!dto.SubjectId.HasValue)
+                return BadRequest(new { message = "SubjectId is required" });
+
+            var gradeDate = dto.Date ?? DateOnly.FromDateTime(DateTime.Today);
+
+            var existing = await _context.Grades
+                .FirstOrDefaultAsync(g =>
+                    g.StudentId == dto.StudentId &&
+                    g.SubjectId == dto.SubjectId &&
+                    g.Date == gradeDate);
+
+            if (!dto.Grade.HasValue)
+            {
+                if (existing != null)
+                {
+                    _context.Grades.Remove(existing);
+                    await _context.SaveChangesAsync();
+                }
+
+                return Ok(new { message = "Grade removed" });
+            }
+
+            if (existing != null)
+            {
+                existing.GradeValue = dto.Grade.Value;
+                _context.Grades.Update(existing);
+                await _context.SaveChangesAsync();
+                return Ok(new { id = existing.Id, message = "Grade updated" });
+            }
+
             var grade = new Grade
             {
                 StudentId = dto.StudentId,
-                GradeValue = dto.Grade,
+                GradeValue = dto.Grade.Value,
                 SubjectId = dto.SubjectId,
-                Date = dto.Date ?? DateOnly.FromDateTime(DateTime.Today)
+                Date = gradeDate
             };
 
             _context.Grades.Add(grade);
@@ -107,16 +293,33 @@
             return Ok(new { id = grade.Id, message = "Grade added" });
         }
 
-        // POST: api/teacher/attendance
         [HttpPost("attendance")]
         public async Task<IActionResult> CreateAttendance([FromBody] CreateAttendanceDto dto)
         {
+            var userId = GetCurrentUserId();
+            var lessonBelongsToUser = await _context.Lessons
+                .AnyAsync(l => l.Id == dto.LessonId && l.UserId == userId);
+
+            if (!lessonBelongsToUser)
+                return Forbid();
+
             var existing = await _context.Attendances
                 .FirstOrDefaultAsync(a => a.LessonId == dto.LessonId && a.StudentId == dto.StudentId);
 
+            if (!dto.TypeId.HasValue)
+            {
+                if (existing != null)
+                {
+                    _context.Attendances.Remove(existing);
+                    await _context.SaveChangesAsync();
+                }
+
+                return Ok(new { message = "Attendance removed" });
+            }
+
             if (existing != null)
             {
-                existing.TypeId = dto.TypeId;
+                existing.TypeId = dto.TypeId.Value;
                 _context.Attendances.Update(existing);
             }
             else
@@ -125,7 +328,7 @@
                 {
                     LessonId = dto.LessonId,
                     StudentId = dto.StudentId,
-                    TypeId = dto.TypeId
+                    TypeId = dto.TypeId.Value
                 };
                 _context.Attendances.Add(attendance);
             }
@@ -134,7 +337,6 @@
             return Ok(new { message = "Attendance saved" });
         }
 
-        // GET: api/teacher/groups/my
         [HttpGet("groups/my")]
         public async Task<IActionResult> GetMyGroups()
         {
@@ -144,13 +346,12 @@
                 .Where(ugs => ugs.UserId == userId)
                 .Select(ugs => ugs.Group)
                 .Distinct()
-                .Select(g => new { g.Id, g.Name })
+                .Select(g => new { g!.Id, g.Name })
                 .ToListAsync();
 
             return Ok(groups);
         }
 
-        // GET: api/teacher/students/by-group/{groupId}
         [HttpGet("students/by-group/{groupId}")]
         public async Task<IActionResult> GetStudentsByGroup(int groupId)
         {
@@ -162,7 +363,6 @@
             return Ok(students);
         }
 
-        // GET: api/teacher/grades/student/{studentId}
         [HttpGet("grades/student/{studentId}")]
         public async Task<IActionResult> GetStudentGrades(int studentId)
         {
@@ -182,7 +382,6 @@
             return Ok(grades);
         }
 
-        // GET: api/teacher/attendance-types
         [HttpGet("attendance-types")]
         public async Task<IActionResult> GetAttendanceTypes()
         {

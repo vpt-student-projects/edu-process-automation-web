@@ -4,6 +4,7 @@ import React, { useCallback } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Calendar, Users, LogOut, BookOpen } from "lucide-react";
+import { clearAuthSession } from "@/lib/auth/session";
 
 const navItems = [
     { href: "/schedule", icon: Calendar, label: "Расписание" },
@@ -14,7 +15,9 @@ const navItems = [
 const Navbar: React.FC = () => {
     const pathname = usePathname();
     const router = useRouter();
+
     const handleLogout = useCallback(() => {
+        clearAuthSession();
         router.push("/");
     }, [router]);
 
