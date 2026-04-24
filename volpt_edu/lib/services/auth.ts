@@ -21,7 +21,7 @@ export async function loginUser({
     password,
 }: LoginRequest): Promise<AuthSessionPayload> {
     const normalizedBaseUrl = saveApiBaseUrl(apiBaseUrl);
-    const response = await fetch(`${normalizedBaseUrl}/api/auth/login`, {
+    const response = await fetch(`${normalizedBaseUrl}/api/Auth/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
