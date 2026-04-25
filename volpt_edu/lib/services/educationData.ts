@@ -357,7 +357,7 @@ export function loadGroups(): ServiceResult<ReadonlyArray<GroupSummary>> {
 export async function loadGroupsFromApi(): Promise<
     ServiceResult<ReadonlyArray<GroupSummary>>
 > {
-    const result = await apiGet<ApiGroupDto[]>("/api/teacher/groups/my");
+    const result = await apiGet<ApiGroupDto[]>("/api/Teacher/groups/my");
     if (result.error) {
         return result;
     }
@@ -375,7 +375,7 @@ export async function loadGroupsFromApi(): Promise<
 export async function loadJournalFiltersFromApi(): Promise<
     ServiceResult<JournalFiltersData>
 > {
-    return apiGet<ApiJournalFiltersResponse>("/api/teacher/journal/filters");
+    return apiGet<ApiJournalFiltersResponse>("/api/Teacher/journal/filters");
 }
 
 export async function loadJournalDataFromApi(
@@ -402,14 +402,14 @@ export async function loadJournalDataFromApi(
     const to = formatApiDate(lastDate);
 
     return apiGet<ApiJournalDataResponse>(
-        `/api/teacher/journal?groupId=${groupId}&subjectId=${subjectId}&from=${from}&to=${to}`,
+        `/api/Teacher/journal?groupId=${groupId}&subjectId=${subjectId}&from=${from}&to=${to}`,
     );
 }
 
 export async function saveGradeToApi(
     request: SaveGradeRequest,
 ): Promise<ServiceResult<null>> {
-    return apiPost("/api/teacher/grades", {
+    return apiPost("/api/Teacher/grades", {
         studentId: request.studentId,
         subjectId: request.subjectId,
         grade: request.grade,
@@ -420,7 +420,7 @@ export async function saveGradeToApi(
 export async function saveAttendanceToApi(
     request: SaveAttendanceRequest,
 ): Promise<ServiceResult<null>> {
-    return apiPost("/api/teacher/attendance", {
+    return apiPost("/api/Teacher/attendance", {
         lessonId: request.lessonId,
         studentId: request.studentId,
         typeId: request.typeId,
@@ -480,7 +480,7 @@ export async function loadScheduleTemplateFromApi(
     const from = formatApiDate(firstDate);
     const to = formatApiDate(lastDate);
     const result = await apiGet<ApiLessonDto[]>(
-        `/api/teacher/lessons/my?from=${from}&to=${to}`,
+        `/api/Teacher/lessons/my?from=${from}&to=${to}`,
     );
 
     if (result.error) {
