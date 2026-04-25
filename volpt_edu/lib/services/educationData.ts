@@ -45,6 +45,59 @@ interface ApiGroupDto {
     name: string;
 }
 
+interface ApiLessonStudentDto {
+    id: number;
+    fullName: string;
+    attendanceTypeId: number | null;
+    attendanceTypeName: string | null;
+}
+
+interface ApiStudentByGroupDto {
+    id: number;
+    fullName: string;
+}
+
+interface ApiStudentGradeDto {
+    id: number;
+    grade: number;
+    date: string | null;
+    subjectName: string | null;
+}
+
+interface ApiAttendanceTypeDto {
+    id: number;
+    name: string;
+}
+
+export interface TeacherLesson {
+    id: number;
+    date: string;
+    number: number;
+    subjectName: string;
+    groupName: string;
+    classroom: string | null;
+    comment: string | null;
+}
+
+export interface TeacherLessonStudent {
+    id: number;
+    fullName: string;
+    attendanceTypeId: number | null;
+    attendanceTypeName: string | null;
+}
+
+export interface TeacherStudentBasic {
+    id: number;
+    fullName: string;
+}
+
+export interface TeacherStudentGrade {
+    id: number;
+    grade: number;
+    date: string | null;
+    subjectName: string | null;
+}
+
 export interface JournalSubjectFilter {
     subjectId: number;
     subjectName: string;
@@ -357,19 +410,39 @@ export function loadGroups(): ServiceResult<ReadonlyArray<GroupSummary>> {
 export async function loadGroupsFromApi(): Promise<
     ServiceResult<ReadonlyArray<GroupSummary>>
 > {
-    const result = await apiGet<ApiGroupDto[]>("/api/Teacher/groups/my");
+    const result = await apiGet<ApiJournalFiltersResponse>(
+        "/api/Teacher/journal/filters",
+    );
     if (result.error) {
         return result;
     }
 
     return {
-        data: result.data.map((group) => ({
-            id: String(group.id),
-            name: group.name,
-            subjects: [],
+        data: result.data.groups.map((group) => ({
+            id: String(group.groupId),
+            name: group.groupName,
+            subjects: group.subjects.map((subject) => subject.subjectName),
         })),
         error: null,
     };
+}
+
+export async function loadTeacherLessonsFromApi(
+    from?: Date,
+    to?: Date,
+): Promise<ServiceResult<ReadonlyArray<TeacherLesson>>> {
+    const params = new URLSearchParams();
+
+    if (from) {
+        params.set("from", formatApiDate(from));
+    }
+
+    if (to) {
+        params.set("to", formatApiDate(to));
+    }
+
+    const suffix = params.size > 0 ? `?${params.toString()}` : "";
+    return apiGet<ApiLessonDto[]>(`/api/Teacher/lessons/my${suffix}`);
 }
 
 export async function loadJournalFiltersFromApi(): Promise<
@@ -425,6 +498,36 @@ export async function saveAttendanceToApi(
         studentId: request.studentId,
         typeId: request.typeId,
     });
+}
+
+export async function loadLessonStudentsFromApi(
+    lessonId: number,
+): Promise<ServiceResult<ReadonlyArray<TeacherLessonStudent>>> {
+    return apiGet<ApiLessonStudentDto[]>(
+        `/api/Teacher/lessons/${lessonId}/students`,
+    );
+}
+
+export async function loadStudentsByGroupFromApi(
+    groupId: number,
+): Promise<ServiceResult<ReadonlyArray<TeacherStudentBasic>>> {
+    return apiGet<ApiStudentByGroupDto[]>(
+        `/api/Teacher/students/by-group/${groupId}`,
+    );
+}
+
+export async function loadStudentGradesFromApi(
+    studentId: number,
+): Promise<ServiceResult<ReadonlyArray<TeacherStudentGrade>>> {
+    return apiGet<ApiStudentGradeDto[]>(
+        `/api/Teacher/grades/student/${studentId}`,
+    );
+}
+
+export async function loadAttendanceTypesFromApi(): Promise<
+    ServiceResult<ReadonlyArray<JournalAttendanceType>>
+> {
+    return apiGet<ApiAttendanceTypeDto[]>("/api/Teacher/attendance-types");
 }
 
 export function loadStudents(): ServiceResult<ReadonlyArray<Student>> {

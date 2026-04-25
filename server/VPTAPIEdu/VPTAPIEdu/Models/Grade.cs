@@ -9,6 +9,7 @@
         [Key]
         public int Id { get; set; }
         public int StudentId { get; set; }
+        [Column("Grade")]
         public int GradeValue { get; set; }
         public DateOnly? Date { get; set; }
         public int? SubjectId { get; set; }
