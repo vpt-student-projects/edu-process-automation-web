@@ -58,3 +58,7 @@ export function getRefreshToken(): string | null {
 
     return window.localStorage.getItem(REFRESH_TOKEN_STORAGE_KEY);
 }
+
+export function hasAuthSession(): boolean {
+    return Boolean(getAccessToken() && getRefreshToken());
+}

@@ -1,11 +1,24 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import LandingPage from "@/components/LandingPage";
 import LoginPage from "@/components/LoginPage";
+import { hasAuthSession } from "@/lib/auth/session";
 
 export default function AuthSplitPage() {
     const [activeTab, setActiveTab] = useState<"landing" | "login">("landing");
     const [isMobile, setIsMobile] = useState(false);
+    const [checkingSession, setCheckingSession] = useState(true);
+    const router = useRouter();
+
+    useEffect(() => {
+        if (hasAuthSession()) {
+            router.replace("/schedule");
+            return;
+        }
+
+        setCheckingSession(false);
+    }, [router]);
 
     useEffect(() => {
         const check = () => setIsMobile(window.innerWidth < 768);
@@ -13,6 +26,16 @@ export default function AuthSplitPage() {
         window.addEventListener("resize", check);
         return () => window.removeEventListener("resize", check);
     }, []);
+
+    if (checkingSession) {
+        return (
+            <main className="min-h-screen flex items-center justify-center">
+                <div className="text-body text-text/80">
+                    Проверка сохраненной сессии...
+                </div>
+            </main>
+        );
+    }
 
     if (!isMobile) {
         return (
