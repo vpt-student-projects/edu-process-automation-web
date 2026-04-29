@@ -11,8 +11,8 @@
         public int StudentId { get; set; }
         [Column("Grade")]
         public int GradeValue { get; set; }
-        public DateOnly? Date { get; set; }
-        public int? SubjectId { get; set; }
+        public DateOnly Date { get; set; }
+        public int SubjectId { get; set; }
 
         [ForeignKey("StudentId")]
         public Student? Student { get; set; }

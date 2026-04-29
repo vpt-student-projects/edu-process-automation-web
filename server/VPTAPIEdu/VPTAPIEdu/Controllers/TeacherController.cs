@@ -150,32 +150,30 @@ namespace VPTAPIEdu.Controllers
                 .ToListAsync();
 
             var studentIds = students.Select(s => s.Id).ToList();
-            var lessonIds = lessons.Select(l => l.LessonId).ToList();
 
             var grades = await _context.Grades
                 .Where(g =>
                     studentIds.Contains(g.StudentId) &&
                     g.SubjectId == subjectId &&
-                    g.Date.HasValue &&
-                    g.Date.Value >= dateFrom &&
-                    g.Date.Value <= dateTo)
+                    g.Date >= dateFrom &&
+                    g.Date <= dateTo)
                 .Select(g => new
                 {
                     g.StudentId,
-                    Date = g.Date!.Value,
+                    Date = g.Date,
                     Grade = g.GradeValue
                 })
                 .ToListAsync();
 
             var attendances = await _context.Attendances
-                .Where(a => lessonIds.Contains(a.LessonId) && studentIds.Contains(a.StudentId))
+                .Where(a => a.SubjectId == subjectId && studentIds.Contains(a.StudentId) && a.Date >= dateFrom &&
+                    a.Date <= dateTo)
                 .Include(a => a.Type)
-                .Include(a => a.Lesson)
                 .Select(a => new
                 {
                     a.StudentId,
-                    a.LessonId,
-                    Date = a.Lesson != null ? a.Lesson.Date : (DateOnly?)null,
+                    a.SubjectId,
+                    Date = a.Date,
                     a.TypeId,
                     TypeName = a.Type != null ? a.Type.Name : null
                 })
@@ -200,11 +198,11 @@ namespace VPTAPIEdu.Controllers
                         .OrderBy(g => g.Date)
                         .ToList(),
                     Attendances = attendances
-                        .Where(a => a.StudentId == student.Id && a.Date.HasValue)
+                        .Where(a => a.StudentId == student.Id)
                         .Select(a => new JournalAttendanceItemDto
                         {
-                            LessonId = a.LessonId,
-                            Date = a.Date!.Value,
+                            SubjectId = a.SubjectId,
+                            Date = a.Date,
                             AttendanceTypeId = a.TypeId,
                             AttendanceTypeName = a.TypeName
                         })
@@ -233,11 +231,11 @@ namespace VPTAPIEdu.Controllers
                     Id = s.Id,
                     FullName = s.FullName,
                     AttendanceTypeId = _context.Attendances
-                        .Where(a => a.LessonId == id && a.StudentId == s.Id)
+                        .Where(a => a.SubjectId == id && a.StudentId == s.Id && a.Date == lesson.Date)
                         .Select(a => a.TypeId)
                         .FirstOrDefault(),
                     AttendanceTypeName = _context.Attendances
-                        .Where(a => a.LessonId == id && a.StudentId == s.Id)
+                        .Where(a => a.SubjectId == id && a.StudentId == s.Id && a.Date == lesson.Date)
                         .Select(a => a.Type != null ? a.Type.Name : null)
                         .FirstOrDefault()
                 })
@@ -249,10 +247,8 @@ namespace VPTAPIEdu.Controllers
         [HttpPost("grades")]
         public async Task<IActionResult> CreateGrade([FromBody] CreateGradeDto dto)
         {
-            if (!dto.SubjectId.HasValue)
-                return BadRequest(new { message = "SubjectId is required" });
 
-            var gradeDate = dto.Date ?? DateOnly.FromDateTime(DateTime.Today);
+            var gradeDate = dto.Date;
 
             var existing = await _context.Grades
                 .FirstOrDefaultAsync(g =>
@@ -297,14 +293,12 @@ namespace VPTAPIEdu.Controllers
         public async Task<IActionResult> CreateAttendance([FromBody] CreateAttendanceDto dto)
         {
             var userId = GetCurrentUserId();
-            var lessonBelongsToUser = await _context.Lessons
-                .AnyAsync(l => l.Id == dto.LessonId && l.UserId == userId);
+            
 
-            if (!lessonBelongsToUser)
-                return Forbid();
+            var AttendanceDate = dto.Date;
 
             var existing = await _context.Attendances
-                .FirstOrDefaultAsync(a => a.LessonId == dto.LessonId && a.StudentId == dto.StudentId);
+                .FirstOrDefaultAsync(a => a.SubjectId == dto.SubjectId && a.StudentId == dto.StudentId && a.Date == dto.Date);
 
             if (!dto.TypeId.HasValue)
             {
@@ -326,9 +320,10 @@ namespace VPTAPIEdu.Controllers
             {
                 var attendance = new Attendance
                 {
-                    LessonId = dto.LessonId,
+                    SubjectId = dto.SubjectId,
                     StudentId = dto.StudentId,
-                    TypeId = dto.TypeId.Value
+                    TypeId = dto.TypeId.Value,
+                    Date = AttendanceDate
                 };
                 _context.Attendances.Add(attendance);
             }

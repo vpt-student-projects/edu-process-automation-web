@@ -40,7 +40,7 @@ namespace VPTAPIEdu.Dtos
 
     public class JournalAttendanceItemDto
     {
-        public int LessonId { get; set; }
+        public int SubjectId { get; set; }
         public DateOnly Date { get; set; }
         public int? AttendanceTypeId { get; set; }
         public string? AttendanceTypeName { get; set; }
