@@ -48,7 +48,7 @@
 
 - Страница авторизации
   
-<img src = "images/Login.png"/>
+<img src = "images/Login.jpg"/>
 
 - Страница расписания
   
