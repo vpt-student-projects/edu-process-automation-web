@@ -46,23 +46,23 @@
 
 **Основные компоненты:**
 
-- Страница авторизации (`LoginWindow`)
+- Страница авторизации
   
 <img src = "images/Login.png"/>
 
-- Страница расписания (`Timetable`)
+- Страница расписания
   
 <img src = "images/Timetable.png"/>
 
-- Страница посещаемости  (`AttendancePage`)
+- Страница посещаемости
   
 <img src = "images/Attendance.png"/>
 
-- Страница успеваемости  (`PerformancePage`)
+- Страница успеваемости
   
 <img src = "images/Grades.png"/>
 
-- Страница Групп  (`GroupPage`)
+- Страница Групп
   
 <img src = "images/Groups.png"/>
 
