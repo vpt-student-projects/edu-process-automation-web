@@ -57,6 +57,24 @@ export default function SchedulePage() {
         },
         [router],
     );
+    const handleDatePick = useCallback((selectedDate: Date) => {
+        const today = new Date();
+        const selected = new Date(selectedDate);
+
+        selected.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+
+        const selectedDay = selected.getDay();
+        const mondayOffset = selectedDay === 0 ? -6 : 1 - selectedDay;
+        selected.setDate(selected.getDate() + mondayOffset);
+
+        const msInWeek = 1000 * 60 * 60 * 24 * 7;
+        const offset = Math.round(
+            (selected.getTime() - today.getTime()) / msInWeek,
+        );
+
+        setWeekOffset(offset);
+    }, []);
 
     return (
         <div className="p-4 md:p-6 w-full mb-24">
@@ -73,6 +91,7 @@ export default function SchedulePage() {
                     weekRange={weekRange}
                     onPrev={() => setWeekOffset((p) => p - 1)}
                     onNext={() => setWeekOffset((p) => p + 1)}
+                    onDatePick={handleDatePick}
                 />
             </div>
 
