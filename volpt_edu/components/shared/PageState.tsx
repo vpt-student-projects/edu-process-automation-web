@@ -1,5 +1,7 @@
 "use client";
 
+import GlassCard from "../GlassCard";
+
 type PageStateVariant = "empty" | "error";
 
 interface Props {
@@ -21,11 +23,9 @@ export function PageState({
             : "border-primary/20 bg-primary/10 text-text/90";
 
     return (
-        <div
-            className={`rounded-2xl border px-6 py-10 text-center backdrop-blur-md ${tone} ${className}`}
-        >
-            <h3 className="text-h4 mb-2">{title}</h3>
+        <GlassCard className={`py-24 text-center ${tone} ${className}`}>
+            <h3 className="text-h4 mb-1">{title}</h3>
             <p className="text-body text-text/80">{description}</p>
-        </div>
+        </GlassCard>
     );
 }

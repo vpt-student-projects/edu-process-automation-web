@@ -30,7 +30,7 @@ const Navbar: React.FC = () => {
         flex items-center gap-2 p-2 rounded-full
         bg-background/[0.08] backdrop-blur-xl
         border border-primary/20
-        shadow-[0_4px_16px_0_rgba(0,0,0,0.2),inset_0_1px_0_0_rgba(255,255,255,0.2)]
+        shadow-[0_2px_4px_0_rgba(0,0,0,0.1),inset_0_1px_0_0_rgba(255,255,255,0.2)]
       "
             >
                 {navItems.map((item) => {
@@ -43,7 +43,7 @@ const Navbar: React.FC = () => {
                             href={item.href}
                             className={`
                 relative flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300 group
-                ${isActive ? "text-white" : "text-primary/60 hover:text-secondary/85 hover:bg-primary/10"}
+                ${isActive ? "text-white" : "text-primary/65 "}
               `}
                         >
                             {isActive && (
