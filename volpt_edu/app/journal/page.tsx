@@ -28,6 +28,7 @@ import {
     type ServiceError,
 } from "@/lib/services/educationData";
 import { PageState } from "@/components/shared/PageState";
+import { PageSkeleton } from "@/components/shared/PageSkeleton";
 
 const ITEMS_PER_PAGE = 18;
 
@@ -71,12 +72,12 @@ function JournalContent() {
     const [selectedSubject, setSelectedSubject] = useState("");
     const [grades, setGrades] = useState<GradesState>({});
     const [attendance, setAttendance] = useState<AttendanceState>({});
-    const [students, setStudents] = useState<ReadonlyArray<{ id: string; name: string }>>(
-        [],
-    );
-    const [lessonIdsByDay, setLessonIdsByDay] = useState<Record<number, number>>(
-        {},
-    );
+    const [students, setStudents] = useState<
+        ReadonlyArray<{ id: string; name: string }>
+    >([]);
+    const [lessonIdsByDay, setLessonIdsByDay] = useState<
+        Record<number, number>
+    >({});
     const [loadingFilters, setLoadingFilters] = useState(true);
     const [loadingJournal, setLoadingJournal] = useState(true);
     const [error, setError] = useState<ServiceError | null>(null);
@@ -90,8 +91,9 @@ function JournalContent() {
 
     const selectedGroupData = useMemo(
         () =>
-            filtersData?.groups.find((group) => group.groupName === selectedGroup) ??
-            null,
+            filtersData?.groups.find(
+                (group) => group.groupName === selectedGroup,
+            ) ?? null,
         [filtersData, selectedGroup],
     );
 
@@ -122,7 +124,9 @@ function JournalContent() {
             const data = result.data;
             const requestedGroup = searchParams.get("group");
             const initialGroup =
-                data.groups.find((group) => group.groupName === requestedGroup) ??
+                data.groups.find(
+                    (group) => group.groupName === requestedGroup,
+                ) ??
                 data.groups[0] ??
                 null;
             const requestedSubject = searchParams.get("subject");
@@ -232,8 +236,11 @@ function JournalContent() {
                     );
 
                     if (dayIndex >= 0) {
-                        nextGrades[studentKey]![dayIndex] =
-                            grade.grade as 2 | 3 | 4 | 5;
+                        nextGrades[studentKey]![dayIndex] = grade.grade as
+                            | 2
+                            | 3
+                            | 4
+                            | 5;
                     }
                 }
 
@@ -244,7 +251,9 @@ function JournalContent() {
 
                     if (dayIndex >= 0) {
                         nextAttendance[studentKey]![dayIndex] =
-                            mapAttendanceTypeNameToStatus(item.attendanceTypeName);
+                            mapAttendanceTypeNameToStatus(
+                                item.attendanceTypeName,
+                            );
                     }
                 }
             }
@@ -279,13 +288,10 @@ function JournalContent() {
         };
     }, [router, selectedGroupData, selectedSubject]);
 
-    const updateFilters = useCallback(
-        (group: string, subject: string) => {
-            setSelectedGroup(group);
-            setSelectedSubject(subject);
-        },
-        [],
-    );
+    const updateFilters = useCallback((group: string, subject: string) => {
+        setSelectedGroup(group);
+        setSelectedSubject(subject);
+    }, []);
 
     const handleGradeClick = useCallback(
         async (studentId: string, dayIdx: number) => {
@@ -419,10 +425,7 @@ function JournalContent() {
             </div>
 
             {loadingFilters ? (
-                <PageState
-                    title="Загрузка фильтров журнала"
-                    description="Получаем группы, предметы и типы посещаемости из API."
-                />
+                <PageSkeleton rows={2} />
             ) : error && !filtersData ? (
                 <PageState
                     title="Ошибка загрузки журнала"
@@ -482,14 +485,18 @@ function JournalContent() {
                                         grades={grades}
                                         attendance={attendance}
                                         onGradeClick={handleGradeClick}
-                                        onAttendanceClick={handleAttendanceClick}
+                                        onAttendanceClick={
+                                            handleAttendanceClick
+                                        }
                                     />
                                 </div>
                                 <JournalPagination
                                     page={page}
                                     totalPages={totalPages}
                                     currentDays={currentDays}
-                                    onPrev={() => setPage((p) => Math.max(0, p - 1))}
+                                    onPrev={() =>
+                                        setPage((p) => Math.max(0, p - 1))
+                                    }
                                     onNext={() =>
                                         setPage((p) =>
                                             Math.min(totalPages - 1, p + 1),

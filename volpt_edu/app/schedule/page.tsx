@@ -12,6 +12,7 @@ import {
 } from "@/lib/services/educationData";
 import type { DayTemplate } from "@/types/types";
 import { PageState } from "@/components/shared/PageState";
+import { PageSkeleton } from "@/components/shared/PageSkeleton";
 
 export default function SchedulePage() {
     const [weekOffset, setWeekOffset] = useState(0);
@@ -96,10 +97,7 @@ export default function SchedulePage() {
             </div>
 
             {loading ? (
-                <PageState
-                    title="Загрузка расписания"
-                    description="Получаем данные преподавателя с API."
-                />
+                <PageSkeleton rows={5} />
             ) : error ? (
                 <PageState
                     title="Расписание недоступно"

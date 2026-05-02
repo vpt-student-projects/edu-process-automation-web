@@ -116,10 +116,10 @@ export function WeekNavigator({
     return (
         <>
             <GlassCard className="!rounded-full" intensity="low">
-                <div className="flex items-center gap-2 p-2 px-2">
+                <div className="flex items-center gap-1 p-2 px-2">
                     <button
                         onClick={onPrev}
-                        className="p-2 rounded-full hover:bg-white/15 transition-colors"
+                        className="p-2 rounded-full hover:bg-white/35 transition-colors"
                     >
                         <ChevronLeft className="text-text w-5 h-5" />
                     </button>
@@ -133,13 +133,13 @@ export function WeekNavigator({
 
                             setIsOpen((prev) => !prev);
                         }}
-                        className="text-text text-body font-medium text-center tracking-wide whitespace-nowrap rounded-full px-3 py-1.5 hover:bg-white/15 transition-colors"
+                        className="text-text text-body font-medium text-center tracking-wide whitespace-nowrap rounded-full px-3 py-1.5 hover:bg-white/35 transition-colors"
                     >
                         {weekRange}
                     </button>
                     <button
                         onClick={onNext}
-                        className="p-2 rounded-full hover:bg-white/15 transition-colors"
+                        className="p-2 rounded-full hover:bg-white/35 transition-colors"
                     >
                         <ChevronRight className="text-text w-5 h-5" />
                     </button>
@@ -161,12 +161,12 @@ export function WeekNavigator({
                     >
                         <GlassCard
                             intensity="low"
-                            className="w-[280px] rounded-2xl p-3 shadow-2xl backdrop-blur-xl"
+                            className="w-[280px] mt-3 p-3 backdrop-blur-lg border border-accent"
                         >
                             <div className="mb-3 flex items-center justify-between">
                                 <button
                                     type="button"
-                                    className="rounded-lg p-1.5 hover:bg-white/15"
+                                    className="rounded-full p-1.5 hover:bg-white/15"
                                     onClick={() =>
                                         setViewDate(
                                             (prev) =>
@@ -188,7 +188,7 @@ export function WeekNavigator({
                                 </span>
                                 <button
                                     type="button"
-                                    className="rounded-lg p-1.5 hover:bg-white/15"
+                                    className="rounded-full p-1.5 hover:bg-white/15"
                                     onClick={() =>
                                         setViewDate(
                                             (prev) =>

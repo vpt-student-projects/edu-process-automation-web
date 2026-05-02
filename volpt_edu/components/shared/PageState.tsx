@@ -24,7 +24,7 @@ export function PageState({
 
     return (
         <GlassCard className={`py-24 text-center ${tone} ${className}`}>
-            <h3 className="text-h4 mb-1">{title}</h3>
+            <h3 className="text-h3 mb-2">{title}</h3>
             <p className="text-body text-text/80">{description}</p>
         </GlassCard>
     );

@@ -42,17 +42,19 @@ function GroupCardComponent({ group }: Props) {
                                     group: group.name,
                                     subject: sub,
                                 })}
-                                className="flex items-center gap-2 p-3 rounded-xl bg-primary/10 border border-primary/5 hover:bg-accent/15 hover:border-accent/30 transition-colors"
+                                className="flex items-center gap-2 p-3 rounded-xl bg-primary/[0.05] border border-primary/15 hover:bg-accent/15 hover:border-accent/30 group transition-colors"
                             >
-                                <Book className="w-4 h-4 text-secondary/85" />
-                                <span className="text-text text-h6">{sub}</span>
+                                <Book className="w-4 h-4 text-text/85 group-hover:text-accent" />
+                                <span className="text-text text-h6  group-hover:text-accent">
+                                    {sub}
+                                </span>
                             </Link>
                         ))}
                     </div>
                 ) : (
                     <div className="rounded-xl border border-primary/10 bg-primary/5 px-4 py-3 text-body-sm text-text/65">
-                        Предметы для этой группы пока не приходят из API. На этом
-                        этапе мы уже подключили реальные группы, а предметы
+                        Предметы для этой группы пока не приходят из API. На
+                        этом этапе мы уже подключили реальные группы, а предметы
                         подтянем следующим шагом.
                     </div>
                 )}

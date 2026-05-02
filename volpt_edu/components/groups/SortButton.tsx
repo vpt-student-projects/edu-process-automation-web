@@ -13,7 +13,7 @@ export function SortButton({ sortBy, onToggle }: Props) {
     return (
         <GlassCard
             intensity="low"
-            className="w-fit group hover:bg-primary/10 border px-4 py-2 border-primary/5 hover:border-accent/55 transition-colors"
+            className="w-fit group hover:bg-accent/15 border px-4 py-2 border-primary/5 hover:border-accent/55 transition-colors"
         >
             <button
                 onClick={onToggle}
