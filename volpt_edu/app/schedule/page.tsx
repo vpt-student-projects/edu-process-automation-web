@@ -22,7 +22,8 @@ export default function SchedulePage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<ServiceError | null>(null);
     const router = useRouter();
-    const { dates, isToday, formatDate, weekRange } = useWeekDates(weekOffset);
+    const { dates, isToday, formatDate, weekRange, weekStart } =
+        useWeekDates(weekOffset);
 
     useEffect(() => {
         let isMounted = true;
@@ -69,6 +70,10 @@ export default function SchedulePage() {
         const mondayOffset = selectedDay === 0 ? -6 : 1 - selectedDay;
         selected.setDate(selected.getDate() + mondayOffset);
 
+        const todayDay = today.getDay();
+        const todayMondayOffset = todayDay === 0 ? -6 : 1 - todayDay;
+        today.setDate(today.getDate() + todayMondayOffset);
+
         const msInWeek = 1000 * 60 * 60 * 24 * 7;
         const offset = Math.round(
             (selected.getTime() - today.getTime()) / msInWeek,
@@ -90,9 +95,11 @@ export default function SchedulePage() {
                 </div>
                 <WeekNavigator
                     weekRange={weekRange}
+                    weekStart={weekStart}
                     onPrev={() => setWeekOffset((p) => p - 1)}
                     onNext={() => setWeekOffset((p) => p + 1)}
                     onDatePick={handleDatePick}
+                    onToday={() => setWeekOffset(0)}
                 />
             </div>
 

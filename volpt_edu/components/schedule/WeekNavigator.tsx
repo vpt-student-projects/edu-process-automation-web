@@ -1,53 +1,35 @@
-import { useMemo, useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import GlassCard from "@/components/GlassCard";
+import { ScheduleCalendar } from "@/components/schedule/ScheduleCalendar";
+import {
+    iconActionButtonClassName,
+    pillActionButtonClassName,
+} from "@/components/shared/buttonStyles";
 
 interface Props {
     weekRange: string;
+    weekStart: Date;
     onPrev: () => void;
     onNext: () => void;
     onDatePick: (date: Date) => void;
-}
-
-const WEEK_DAYS = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
-
-function getMonthGrid(viewDate: Date) {
-    const monthStart = new Date(viewDate.getFullYear(), viewDate.getMonth(), 1);
-    const monthEnd = new Date(
-        viewDate.getFullYear(),
-        viewDate.getMonth() + 1,
-        0,
-    );
-
-    const startOffset = (monthStart.getDay() + 6) % 7;
-    const daysInMonth = monthEnd.getDate();
-
-    const cells: Array<Date | null> = [];
-
-    for (let i = 0; i < startOffset; i++) cells.push(null);
-    for (let d = 1; d <= daysInMonth; d++) {
-        cells.push(new Date(viewDate.getFullYear(), viewDate.getMonth(), d));
-    }
-    while (cells.length % 7 !== 0) cells.push(null);
-
-    return cells;
+    onToday: () => void;
 }
 
 export function WeekNavigator({
     weekRange,
+    weekStart,
     onPrev,
     onNext,
     onDatePick,
+    onToday,
 }: Props) {
     const [isOpen, setIsOpen] = useState(false);
-    const [viewDate, setViewDate] = useState(new Date());
     const [pos, setPos] = useState({ top: 0, left: 0 });
 
     const triggerRef = useRef<HTMLButtonElement>(null);
     const pickerRef = useRef<HTMLDivElement>(null);
-
-    const monthGrid = useMemo(() => getMonthGrid(viewDate), [viewDate]);
 
     const updatePosition = () => {
         if (!triggerRef.current) {
@@ -74,32 +56,27 @@ export function WeekNavigator({
         if (!isOpen) {
             return;
         }
-
-        updatePosition();
-
-        const handleClickOutside = (event: MouseEvent) => {
-            const target = event.target as Node;
+        const handleReposition = () => {
+            updatePosition();
+        };
+        const handleClickOutside = (e: MouseEvent) => {
+            const target = e.target as Node;
 
             if (
-                pickerRef.current?.contains(target) ||
-                triggerRef.current?.contains(target)
+                pickerRef.current &&
+                !pickerRef.current.contains(target) &&
+                triggerRef.current &&
+                !triggerRef.current.contains(target)
             ) {
-                return;
-            }
-
-            setIsOpen(false);
-        };
-
-        const handleEscape = (event: KeyboardEvent) => {
-            if (event.key === "Escape") {
                 setIsOpen(false);
             }
         };
 
-        const handleReposition = () => {
-            updatePosition();
+        const handleEscape = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                setIsOpen(false);
+            }
         };
-
         document.addEventListener("mousedown", handleClickOutside);
         document.addEventListener("keydown", handleEscape);
         window.addEventListener("resize", handleReposition);
@@ -122,7 +99,7 @@ export function WeekNavigator({
                 <div className="flex items-center gap-1 p-2 px-2">
                     <button
                         onClick={onPrev}
-                        className="p-2 rounded-full transition-colors group hover:bg-accent/15"
+                        className={iconActionButtonClassName}
                     >
                         <ChevronLeft className="text-text w-5 h-5 group-hover:text-accent " />
                     </button>
@@ -136,13 +113,13 @@ export function WeekNavigator({
 
                             setIsOpen((prev) => !prev);
                         }}
-                        className="text-text text-body font-medium text-center tracking-wide whitespace-nowrap rounded-full px-3 py-1.5  hover:text-accent transition-colors"
+                        className={`${pillActionButtonClassName} text-body text-center tracking-wide whitespace-nowrap`}
                     >
                         {weekRange}
                     </button>
                     <button
                         onClick={onNext}
-                        className="p-2 rounded-full group hover:bg-accent/15 transition-colors"
+                        className={iconActionButtonClassName}
                     >
                         <ChevronRight className="text-text w-5 h-5 group-hover:text-accent" />
                     </button>
@@ -162,78 +139,14 @@ export function WeekNavigator({
                         }}
                         className="animate-in fade-in zoom-in-95 duration-150"
                     >
-                        <GlassCard
-                            intensity="low"
-                            className="w-[280px] mt-3 p-3 backdrop-blur-lg"
-                        >
-                            <div className="mb-3 flex items-center justify-between">
-                                <button
-                                    type="button"
-                                    className="rounded-full p-1.5 hover:bg-white/35"
-                                    onClick={() =>
-                                        setViewDate(
-                                            (prev) =>
-                                                new Date(
-                                                    prev.getFullYear(),
-                                                    prev.getMonth() - 1,
-                                                    1,
-                                                ),
-                                        )
-                                    }
-                                >
-                                    <ChevronLeft className="h-4 w-4 text-text" />
-                                </button>
-                                <span className="text-sm font-medium text-text capitalize">
-                                    {viewDate.toLocaleDateString("ru-RU", {
-                                        month: "long",
-                                        year: "numeric",
-                                    })}
-                                </span>
-                                <button
-                                    type="button"
-                                    className="rounded-full p-1.5 hover:bg-white/35"
-                                    onClick={() =>
-                                        setViewDate(
-                                            (prev) =>
-                                                new Date(
-                                                    prev.getFullYear(),
-                                                    prev.getMonth() + 1,
-                                                    1,
-                                                ),
-                                        )
-                                    }
-                                >
-                                    <ChevronRight className="h-4 w-4 text-text" />
-                                </button>
-                            </div>
-
-                            <div className="mb-2 grid grid-cols-7 gap-1 text-center text-xs text-text/75">
-                                {WEEK_DAYS.map((day) => (
-                                    <div key={day}>{day}</div>
-                                ))}
-                            </div>
-
-                            <div className="grid grid-cols-7 gap-1">
-                                {monthGrid.map((date, idx) => (
-                                    <button
-                                        key={`${date?.toISOString() ?? "empty"}-${idx}`}
-                                        type="button"
-                                        disabled={!date}
-                                        onClick={() => {
-                                            if (!date) {
-                                                return;
-                                            }
-
-                                            onDatePick(date);
-                                            setIsOpen(false);
-                                        }}
-                                        className="h-8 rounded-full text-sm text-text enabled:hover:bg-accent/15 border border-transparent enabled:hover:border-accent/15 enabled:hover:text-accent disabled:opacity-0"
-                                    >
-                                        {date?.getDate()}
-                                    </button>
-                                ))}
-                            </div>
-                        </GlassCard>
+                        <ScheduleCalendar
+                            weekStart={weekStart}
+                            onToday={onToday}
+                            onDatePick={(date) => {
+                                onDatePick(date);
+                                setIsOpen(false);
+                            }}
+                        />
                     </div>,
                     document.body,
                 )}

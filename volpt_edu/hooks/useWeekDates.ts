@@ -5,6 +5,7 @@ export function useWeekDates(offset: number) {
 
     const monday = new Date(today);
     monday.setDate(diff + offset * 7);
+    monday.setHours(0, 0, 0, 0);
 
     const dates = Array.from({ length: 6 }, (_, i) => {
         const d = new Date(monday);
@@ -22,5 +23,5 @@ export function useWeekDates(offset: number) {
     const endDate = dates[dates.length - 1] ?? startDate;
     const weekRange = `${formatDate(startDate)} - ${formatDate(endDate)}`;
 
-    return { dates, isToday, formatDate, weekRange };
+    return { dates, isToday, formatDate, weekRange, weekStart: monday };
 }
