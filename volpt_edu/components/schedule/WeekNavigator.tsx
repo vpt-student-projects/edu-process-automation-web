@@ -115,13 +115,16 @@ export function WeekNavigator({
 
     return (
         <>
-            <GlassCard className="!rounded-full" intensity="low">
+            <GlassCard
+                className="!rounded-full border hover:border-accent "
+                intensity="low"
+            >
                 <div className="flex items-center gap-1 p-2 px-2">
                     <button
                         onClick={onPrev}
-                        className="p-2 rounded-full hover:bg-white/35 transition-colors"
+                        className="p-2 rounded-full transition-colors group hover:bg-accent/15"
                     >
-                        <ChevronLeft className="text-text w-5 h-5" />
+                        <ChevronLeft className="text-text w-5 h-5 group-hover:text-accent " />
                     </button>
                     <button
                         ref={triggerRef}
@@ -133,15 +136,15 @@ export function WeekNavigator({
 
                             setIsOpen((prev) => !prev);
                         }}
-                        className="text-text text-body font-medium text-center tracking-wide whitespace-nowrap rounded-full px-3 py-1.5 hover:bg-white/35 transition-colors"
+                        className="text-text text-body font-medium text-center tracking-wide whitespace-nowrap rounded-full px-3 py-1.5  hover:text-accent transition-colors"
                     >
                         {weekRange}
                     </button>
                     <button
                         onClick={onNext}
-                        className="p-2 rounded-full hover:bg-white/35 transition-colors"
+                        className="p-2 rounded-full group hover:bg-accent/15 transition-colors"
                     >
-                        <ChevronRight className="text-text w-5 h-5" />
+                        <ChevronRight className="text-text w-5 h-5 group-hover:text-accent" />
                     </button>
                 </div>
             </GlassCard>
@@ -161,12 +164,12 @@ export function WeekNavigator({
                     >
                         <GlassCard
                             intensity="low"
-                            className="w-[280px] mt-3 p-3 backdrop-blur-lg border border-accent"
+                            className="w-[280px] mt-3 p-3 backdrop-blur-lg"
                         >
                             <div className="mb-3 flex items-center justify-between">
                                 <button
                                     type="button"
-                                    className="rounded-full p-1.5 hover:bg-white/15"
+                                    className="rounded-full p-1.5 hover:bg-white/35"
                                     onClick={() =>
                                         setViewDate(
                                             (prev) =>
@@ -188,7 +191,7 @@ export function WeekNavigator({
                                 </span>
                                 <button
                                     type="button"
-                                    className="rounded-full p-1.5 hover:bg-white/15"
+                                    className="rounded-full p-1.5 hover:bg-white/35"
                                     onClick={() =>
                                         setViewDate(
                                             (prev) =>
@@ -224,7 +227,7 @@ export function WeekNavigator({
                                             onDatePick(date);
                                             setIsOpen(false);
                                         }}
-                                        className="h-8 rounded-lg text-sm text-text enabled:hover:bg-white/15 disabled:opacity-0"
+                                        className="h-8 rounded-full text-sm text-text enabled:hover:bg-accent/15 border border-transparent enabled:hover:border-accent/15 enabled:hover:text-accent disabled:opacity-0"
                                     >
                                         {date?.getDate()}
                                     </button>
