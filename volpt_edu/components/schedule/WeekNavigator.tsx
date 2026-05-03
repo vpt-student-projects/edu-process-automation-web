@@ -99,7 +99,7 @@ export function WeekNavigator({
                 <div className="flex items-center gap-1 p-2 px-2">
                     <button
                         onClick={onPrev}
-                        className={iconActionButtonClassName}
+                        className={`${iconActionButtonClassName} group`}
                     >
                         <ChevronLeft className="text-text w-5 h-5 group-hover:text-accent " />
                     </button>
@@ -119,7 +119,7 @@ export function WeekNavigator({
                     </button>
                     <button
                         onClick={onNext}
-                        className={iconActionButtonClassName}
+                        className={`${iconActionButtonClassName} group`}
                     >
                         <ChevronRight className="text-text w-5 h-5 group-hover:text-accent" />
                     </button>
