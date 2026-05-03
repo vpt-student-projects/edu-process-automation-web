@@ -104,7 +104,7 @@ export default function SchedulePage() {
             </div>
 
             {loading ? (
-                <PageSkeleton rows={5} />
+                <PageSkeleton variant="schedule" />
             ) : error ? (
                 <PageState
                     title="Расписание недоступно"

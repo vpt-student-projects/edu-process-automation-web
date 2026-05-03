@@ -425,7 +425,7 @@ function JournalContent() {
             </div>
 
             {loadingFilters ? (
-                <PageSkeleton rows={2} />
+                <PageSkeleton variant="journal" />
             ) : error && !filtersData ? (
                 <PageState
                     title="Ошибка загрузки журнала"

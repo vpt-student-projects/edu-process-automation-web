@@ -78,7 +78,7 @@ export default function GroupsPage() {
 
             <div className="space-y-5">
                 {loading ? (
-                    <PageSkeleton rows={4} />
+                    <PageSkeleton variant="groups" />
                 ) : error ? (
                     <PageState
                         title="Ошибка загрузки групп"

@@ -96,7 +96,7 @@ export function WeekNavigator({
                 className="!rounded-full border hover:border-accent "
                 intensity="low"
             >
-                <div className="flex items-center gap-1 p-2 px-2">
+                <div className="flex items-center p-1">
                     <button
                         onClick={onPrev}
                         className={`${iconActionButtonClassName} group`}

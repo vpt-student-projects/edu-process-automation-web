@@ -27,14 +27,14 @@ export function LessonCard({ lesson, onClick }: Props) {
                 №{lesson.pairNumber}
             </div>
 
-            <div className="flex justify-between items-start mb-2 pr-4">
+            <div className="flex justify-between items-start mb-2 pr-5">
                 <span className="text-text text-h6 group-hover:text-background transition-colors line-clamp-2 drop-shadow-sm">
                     {lesson.subject}
                 </span>
             </div>
 
             <div className="flex items-center justify-between mt-2">
-                <span className="text-caption bg-accent/10 text-accent group-hover:text-background group-hover:border-background/70 px-2 py-0.5 rounded border border-accent backdrop-blur-sm">
+                <span className="text-caption bg-accent/10 text-accent group-hover:text-background group-hover:border-background/70 px-2 py-0.5 rounded  border border-accent backdrop-blur-sm">
                     {lesson.group}
                 </span>
                 <div className="flex items-center gap-3 text-body-sm ">

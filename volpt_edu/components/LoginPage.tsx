@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Lock, User } from "lucide-react";
+import { Eye, EyeClosed, Lock, User } from "lucide-react";
 import LiquidButton from "@/components/LiquidButton";
 import { getStoredApiBaseUrl } from "@/lib/config/api";
 import { saveAuthSession } from "@/lib/auth/session";
@@ -12,6 +12,7 @@ export default function LoginPage() {
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
     const apiBaseUrl = getStoredApiBaseUrl();
@@ -55,14 +56,14 @@ export default function LoginPage() {
                     </label>
                     <div className="relative group">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <User className="h-5 w-5 text-secondary/50 group-focus-within:text-secondary transition-colors" />
+                            <User className="h-5 w-5 text-secondary/50 group-focus-within:text-accent transition-colors" />
                         </div>
                         <input
                             type="text"
                             value={login}
                             onChange={(event) => setLogin(event.target.value)}
                             required
-                            className="block w-full text-body pl-12 pr-4 py-4 bg-primary/10 border border-primary/15 rounded-2xl text-text/50 group-focus-within:text-secondary placeholder-secondary/60 focus:outline-none focus:ring-1 focus:ring-accent/85 focus:bg-primary/15 transition-all"
+                            className="block w-full text-body pl-12 pr-4 py-4 bg-primary/10 border border-primary/15 rounded-2xl text-text/50 group-focus-within:text-secondary group-hover:border-accent placeholder-secondary/60 focus:outline-none focus:ring-1 focus:ring-accent/85 transition-all"
                             placeholder="логин229"
                         />
                     </div>
@@ -74,18 +75,34 @@ export default function LoginPage() {
                     </label>
                     <div className="relative group">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <Lock className="h-5 w-5 text-secondary/50 group-focus-within:text-secondary transition-colors" />
+                            <Lock className="h-5 w-5 text-secondary/50 group-focus-within:text-accent transition-colors" />
                         </div>
                         <input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             value={password}
                             onChange={(event) =>
                                 setPassword(event.target.value)
                             }
-                            className="block w-full text-body pl-12 pr-4 py-4 bg-primary/10 border border-primary/15 rounded-2xl text-secondary/50 group-focus-within:text-secondary placeholder-secondary/60 focus:outline-none focus:ring-1 focus:ring-accent/85 focus:bg-primary/15 transition-all"
+                            className="block w-full text-body pl-12 pr-12 py-4 bg-primary/10 border border-primary/15 rounded-2xl text-secondary/50 group-focus-within:text-secondary group-hover:border-accent placeholder-secondary/60 focus:outline-none focus:ring-1 focus:ring-accent/85 transition-all"
                             required
                             placeholder="••••••••"
                         />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword((prev) => !prev)}
+                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-secondary/60 hover:text-secondary transition-colors"
+                            aria-label={
+                                showPassword
+                                    ? "Скрыть пароль"
+                                    : "Показать пароль"
+                            }
+                        >
+                            {showPassword ? (
+                                <Eye className="h-5 w-5" />
+                            ) : (
+                                <EyeClosed className="h-5 w-5" />
+                            )}
+                        </button>
                     </div>
                 </div>
 
