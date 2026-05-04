@@ -23,8 +23,12 @@ interface Props {
     startDayIndex: number;
     grades: GradesState;
     attendance: AttendanceState;
-    onGradeClick: (studentId: string, dayIdx: number) => void;
-    onAttendanceClick: (studentId: string, dayIdx: number) => void;
+    onGradeSelect: (studentId: string, dayIdx: number, grade: Grade) => void;
+    onAttendanceSelect: (
+        studentId: string,
+        dayIdx: number,
+        status: AttendanceStatus,
+    ) => void;
 }
 
 interface RowProps {
@@ -34,8 +38,12 @@ interface RowProps {
     startDayIndex: number;
     studentGrades?: Record<number, Grade>;
     studentAttendance?: Record<number, AttendanceStatus>;
-    onGradeClick: (studentId: string, dayIdx: number) => void;
-    onAttendanceClick: (studentId: string, dayIdx: number) => void;
+    onGradeSelect: (studentId: string, dayIdx: number, grade: Grade) => void;
+    onAttendanceSelect: (
+        studentId: string,
+        dayIdx: number,
+        status: AttendanceStatus,
+    ) => void;
 }
 
 const JournalRow = memo(function JournalRow({
@@ -45,8 +53,8 @@ const JournalRow = memo(function JournalRow({
     startDayIndex,
     studentGrades,
     studentAttendance,
-    onGradeClick,
-    onAttendanceClick,
+    onGradeSelect,
+    onAttendanceSelect,
 }: RowProps) {
     return (
         <tr className="hover:bg-background/40 transition-colors group">
@@ -67,8 +75,8 @@ const JournalRow = memo(function JournalRow({
                         grade={studentGrades?.[actualIdx] ?? null}
                         status={studentAttendance?.[actualIdx] ?? null}
                         isToday={isToday}
-                        onGradeClick={onGradeClick}
-                        onAttendanceClick={onAttendanceClick}
+                        onGradeSelect={onGradeSelect}
+                        onAttendanceSelect={onAttendanceSelect}
                     />
                 );
             })}
@@ -83,8 +91,8 @@ export function JournalTable({
     startDayIndex,
     grades,
     attendance,
-    onGradeClick,
-    onAttendanceClick,
+    onGradeSelect,
+    onAttendanceSelect,
 }: Props) {
     return (
         <table
@@ -140,8 +148,8 @@ export function JournalTable({
                         startDayIndex={startDayIndex}
                         studentGrades={grades[student.id]}
                         studentAttendance={attendance[student.id]}
-                        onGradeClick={onGradeClick}
-                        onAttendanceClick={onAttendanceClick}
+                        onGradeSelect={onGradeSelect}
+                        onAttendanceSelect={onAttendanceSelect}
                     />
                 ))}
             </tbody>

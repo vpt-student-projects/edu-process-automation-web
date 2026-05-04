@@ -17,6 +17,7 @@ export function SortButton({ sortBy, onToggle }: Props) {
             className="w-fit group hover:bg-accent/15 border px-4 py-2 border-primary/5 hover:border-accent/55 transition-colors"
         >
             <button
+                onClick={onToggle}
                 className={`${pillActionButtonClassName} flex items-center gap-2 !px-0 !py-0 text-body-sm group-hover:text-accent hover:bg-transparent`}
             >
                 {sortBy === "NAME" ? (

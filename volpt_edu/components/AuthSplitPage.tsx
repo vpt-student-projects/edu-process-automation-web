@@ -8,17 +8,14 @@ import { hasAuthSession } from "@/lib/auth/session";
 export default function AuthSplitPage() {
     const [activeTab, setActiveTab] = useState<"landing" | "login">("landing");
     const [isMobile, setIsMobile] = useState(false);
-    const [checkingSession, setCheckingSession] = useState(true);
     const router = useRouter();
+    const hasSession = hasAuthSession();
 
     useEffect(() => {
-        if (hasAuthSession()) {
+        if (hasSession) {
             router.replace("/schedule");
-            return;
         }
-
-        setCheckingSession(false);
-    }, [router]);
+    }, [hasSession, router]);
 
     useEffect(() => {
         const check = () => setIsMobile(window.innerWidth < 768);
@@ -27,7 +24,7 @@ export default function AuthSplitPage() {
         return () => window.removeEventListener("resize", check);
     }, []);
 
-    if (checkingSession) {
+    if (hasSession) {
         return (
             <main className="min-h-screen flex items-center justify-center">
                 <div className="text-body text-text/80">

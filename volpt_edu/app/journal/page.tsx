@@ -8,8 +8,7 @@ import { JOURNAL_DAYS, TODAY_INDEX } from "@/hooks/useJournalDays";
 import {
     GradesState,
     AttendanceState,
-    nextGrade,
-    nextStatus,
+    type Grade,
     type AttendanceStatus,
 } from "@/types/journal";
 import { JournalFilters } from "@/components/journal/JournalFilters";
@@ -60,6 +59,10 @@ function getAttendanceTypeIdByStatus(
 function JournalContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
+    const [initialQuery] = useState(() => ({
+        group: searchParams.get("group"),
+        subject: searchParams.get("subject"),
+    }));
 
     const [mode, setMode] = useState<JournalMode>("ATTENDANCE");
     const [page, setPage] = useState(() =>
@@ -122,14 +125,14 @@ function JournalContent() {
             }
 
             const data = result.data;
-            const requestedGroup = searchParams.get("group");
+            const requestedGroup = initialQuery.group;
             const initialGroup =
                 data.groups.find(
                     (group) => group.groupName === requestedGroup,
                 ) ??
                 data.groups[0] ??
                 null;
-            const requestedSubject = searchParams.get("subject");
+            const requestedSubject = initialQuery.subject;
             const initialSubject =
                 initialGroup?.subjects.find(
                     (subject) => subject.subjectName === requestedSubject,
@@ -148,7 +151,7 @@ function JournalContent() {
         return () => {
             isMounted = false;
         };
-    }, [router, searchParams]);
+    }, [router]);
 
     useEffect(() => {
         if (!filtersData) {
@@ -293,8 +296,8 @@ function JournalContent() {
         setSelectedSubject(subject);
     }, []);
 
-    const handleGradeClick = useCallback(
-        async (studentId: string, dayIdx: number) => {
+    const handleGradeSelect = useCallback(
+        async (studentId: string, dayIdx: number, nextValue: Grade) => {
             if (!selectedGroupData) {
                 return;
             }
@@ -314,7 +317,6 @@ function JournalContent() {
             }
 
             const previousValue = grades[studentId]?.[dayIdx] ?? null;
-            const nextValue = nextGrade(previousValue);
 
             setGrades((prev) => ({
                 ...prev,
@@ -350,8 +352,12 @@ function JournalContent() {
         [grades, router, selectedGroupData, selectedSubject],
     );
 
-    const handleAttendanceClick = useCallback(
-        async (studentId: string, dayIdx: number) => {
+    const handleAttendanceSelect = useCallback(
+        async (
+            studentId: string,
+            dayIdx: number,
+            nextValue: AttendanceStatus,
+        ) => {
             const lessonId = lessonIdsByDay[dayIdx];
             if (!lessonId || !filtersData) {
                 setError({
@@ -363,7 +369,6 @@ function JournalContent() {
             }
 
             const previousValue = attendance[studentId]?.[dayIdx] ?? null;
-            const nextValue = nextStatus(previousValue);
 
             setAttendance((prev) => ({
                 ...prev,
@@ -410,12 +415,12 @@ function JournalContent() {
                         <span className="text-text/85 whitespace-nowrap shrink-0">
                             Посещаемость и оценки
                         </span>
-                        <span className="text-text/40 shrink-0">В·</span>
+                        <span className="text-text/40 shrink-0">·</span>
                         <span
                             className="text-accent/85 truncate"
-                            title={`${selectedSubject} В· ${selectedGroup}`}
+                            title={`${selectedSubject} · ${selectedGroup}`}
                         >
-                            {selectedSubject} В· {selectedGroup}
+                            {selectedSubject} · {selectedGroup}
                         </span>
                     </div>
                 </div>
@@ -484,9 +489,9 @@ function JournalContent() {
                                         startDayIndex={startDayIndex}
                                         grades={grades}
                                         attendance={attendance}
-                                        onGradeClick={handleGradeClick}
-                                        onAttendanceClick={
-                                            handleAttendanceClick
+                                        onGradeSelect={handleGradeSelect}
+                                        onAttendanceSelect={
+                                            handleAttendanceSelect
                                         }
                                     />
                                 </div>

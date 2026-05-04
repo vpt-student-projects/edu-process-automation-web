@@ -1,6 +1,7 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { JournalMode } from "@/types/types";
 import {
     Grade,
@@ -16,8 +17,12 @@ interface Props {
     grade: Grade;
     status: AttendanceStatus;
     isToday: boolean;
-    onGradeClick: (studentId: string, dayIdx: number) => void;
-    onAttendanceClick: (studentId: string, dayIdx: number) => void;
+    onGradeSelect: (studentId: string, dayIdx: number, grade: Grade) => void;
+    onAttendanceSelect: (
+        studentId: string,
+        dayIdx: number,
+        status: AttendanceStatus,
+    ) => void;
 }
 
 function JournalCellComponent({
@@ -27,9 +32,15 @@ function JournalCellComponent({
     grade,
     status,
     isToday,
-    onGradeClick,
-    onAttendanceClick,
+    onGradeSelect,
+    onAttendanceSelect,
 }: Props) {
+    const [open, setOpen] = useState(false);
+    const rootRef = useRef<HTMLDivElement | null>(null);
+    const [menuPosition, setMenuPosition] = useState<{
+        top: number;
+        left: number;
+    } | null>(null);
     const base =
         "inline-flex items-center justify-center w-8 h-8 rounded-lg font-bold border transition-all duration-150 hover:scale-110 active:scale-95";
     const empty =
@@ -49,17 +60,149 @@ function JournalCellComponent({
                 {status ?? "·"}
             </span>
         );
+    const gradeOptions = useMemo(
+        () => [
+            { value: null as Grade, label: "Удалить отметку", marker: "·" },
+            { value: 2 as Grade, label: "Неудовлетворительно", marker: "2" },
+            { value: 3 as Grade, label: "Удовлетворительно", marker: "3" },
+            { value: 4 as Grade, label: "Хорошо", marker: "4" },
+            { value: 5 as Grade, label: "Отлично", marker: "5" },
+        ],
+        [],
+    );
+
+    const attendanceOptions = useMemo(
+        () => [
+            {
+                value: null as AttendanceStatus,
+                label: "Удалить отметку",
+                marker: "·",
+            },
+            { value: "НБ" as AttendanceStatus, label: "Не был", marker: "НБ" },
+            {
+                value: "ОП" as AttendanceStatus,
+                label: "Опоздание",
+                marker: "ОП",
+            },
+            {
+                value: "УВ" as AttendanceStatus,
+                label: "Уважительная причина",
+                marker: "УВ",
+            },
+            {
+                value: "УШ" as AttendanceStatus,
+                label: "Ушел с пары",
+                marker: "УШ",
+            },
+            {
+                value: "ОТ" as AttendanceStatus,
+                label: "Отработка",
+                marker: "ОТ",
+            },
+        ],
+        [],
+    );
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (
+                rootRef.current &&
+                !rootRef.current.contains(event.target as Node)
+            ) {
+                setOpen(false);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () =>
+            document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+    useEffect(() => {
+        if (!open || !rootRef.current) {
+            return;
+        }
+
+        const updatePosition = () => {
+            const rect = rootRef.current?.getBoundingClientRect();
+            if (!rect) return;
+
+            const menuHeight = 200; // примерно, можно уточнить
+            const spaceBelow = window.innerHeight - rect.bottom;
+            const spaceAbove = rect.top;
+
+            const shouldOpenUp =
+                spaceBelow < menuHeight && spaceAbove > menuHeight;
+
+            setMenuPosition({
+                top: shouldOpenUp ? rect.top - menuHeight - 6 : rect.bottom + 6,
+                left: Math.max(8, rect.right - 60), // 208 ≈ ширина меню (w-52)
+            });
+        };
+
+        updatePosition();
+        window.addEventListener("scroll", updatePosition, true);
+        window.addEventListener("resize", updatePosition);
+        return () => {
+            window.removeEventListener("scroll", updatePosition, true);
+            window.removeEventListener("resize", updatePosition);
+        };
+    }, [open]);
 
     return (
         <td
-            onClick={() =>
-                mode === "GRADES"
-                    ? onGradeClick(studentId, dayIdx)
-                    : onAttendanceClick(studentId, dayIdx)
-            }
-            className={`py-2.5 px-1 text-center border-r border-secondary/5 cursor-pointer select-none ${isToday ? "bg-accent/5" : ""}`}
+            className={`py-2.5 px-1 text-center border-r border-secondary/5 select-none ${isToday ? "bg-accent/5" : ""}`}
         >
-            {content}
+            <div className="relative" ref={rootRef}>
+                <button type="button" onClick={() => setOpen((prev) => !prev)}>
+                    {content}
+                </button>
+                {open &&
+                    menuPosition &&
+                    createPortal(
+                        <div
+                            className="fixed z-[100] w-52 rounded-xl border border-secondary/20 bg-background/95 backdrop-blur-xl shadow-xl p-1"
+                            style={{
+                                top: menuPosition.top,
+                                left: menuPosition.left,
+                            }}
+                        >
+                            {(mode === "GRADES"
+                                ? gradeOptions
+                                : attendanceOptions
+                            ).map((option) => (
+                                <button
+                                    key={`${studentId}-${dayIdx}-${option.marker}-${option.label}`}
+                                    type="button"
+                                    className="w-full px-3 py-2 rounded-lg hover:bg-accent/10 text-left text-xs text-text/90 flex items-center justify-between"
+                                    onClick={() => {
+                                        if (mode === "GRADES") {
+                                            onGradeSelect(
+                                                studentId,
+                                                dayIdx,
+                                                option.value as Grade,
+                                            );
+                                        } else {
+                                            onAttendanceSelect(
+                                                studentId,
+                                                dayIdx,
+                                                option.value as AttendanceStatus,
+                                            );
+                                        }
+                                        setOpen(false);
+                                    }}
+                                >
+                                    <span className="text-h6">
+                                        {option.marker}
+                                    </span>
+                                    <span className="text-caption">
+                                        {option.label}
+                                    </span>
+                                </button>
+                            ))}
+                        </div>,
+                        document.body,
+                    )}
+            </div>
         </td>
     );
 }

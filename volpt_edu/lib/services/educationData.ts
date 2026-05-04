@@ -353,7 +353,10 @@ async function apiGet<T>(path: string): Promise<ServiceResult<T>> {
     }
 }
 
-async function apiPost(path: string, body: unknown): Promise<ServiceResult<null>> {
+async function apiPost(
+    path: string,
+    body: unknown,
+): Promise<ServiceResult<null>> {
     const headers = getAuthHeaders();
     if (!headers) {
         return { data: null, error: mapUnauthorizedError() };
@@ -395,7 +398,9 @@ export function loadGroups(): ServiceResult<ReadonlyArray<GroupSummary>> {
         if (!(MOCK_GROUPS as unknown[]).every(isGroupDto)) {
             return {
                 data: null,
-                error: mapValidationError("Получены некорректные данные групп."),
+                error: mapValidationError(
+                    "Получены некорректные данные групп.",
+                ),
             };
         }
         return { data: getGroups(), error: null };
