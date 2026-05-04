@@ -171,8 +171,10 @@ export interface SaveGradeRequest {
 }
 
 export interface SaveAttendanceRequest {
-    lessonId: number;
+    subjectId: number;
     studentId: number;
+    /** YYYY-MM-DD (календарная дата, как в CreateAttendanceDto) */
+    date: string;
     typeId: number | null;
 }
 
@@ -300,8 +302,12 @@ function mapApiLessonDto(dto: ApiLessonDto): LessonDto {
     };
 }
 
+/** Календарная дата в локальной зоне (расписание/журнал — не UTC из toISOString). */
 function formatApiDate(date: Date): string {
-    return date.toISOString().slice(0, 10);
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const d = String(date.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
 }
 
 function formatDayName(date: Date): string {
@@ -499,8 +505,9 @@ export async function saveAttendanceToApi(
     request: SaveAttendanceRequest,
 ): Promise<ServiceResult<null>> {
     return apiPost("/api/Teacher/attendance", {
-        lessonId: request.lessonId,
+        subjectId: request.subjectId,
         studentId: request.studentId,
+        date: request.date,
         typeId: request.typeId,
     });
 }

@@ -37,10 +37,12 @@ function JournalCellComponent({
 }: Props) {
     const [open, setOpen] = useState(false);
     const rootRef = useRef<HTMLDivElement | null>(null);
+    const menuRef = useRef<HTMLDivElement | null>(null);
     const [menuPosition, setMenuPosition] = useState<{
         top: number;
         left: number;
     } | null>(null);
+
     const base =
         "inline-flex items-center justify-center w-8 h-8 rounded-lg font-bold border transition-all duration-150 hover:scale-110 active:scale-95";
     const empty =
@@ -60,6 +62,7 @@ function JournalCellComponent({
                 {status ?? "·"}
             </span>
         );
+
     const gradeOptions = useMemo(
         () => [
             { value: null as Grade, label: "Удалить отметку", marker: "·" },
@@ -104,19 +107,25 @@ function JournalCellComponent({
     );
 
     useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
-            if (
-                rootRef.current &&
-                !rootRef.current.contains(event.target as Node)
-            ) {
-                setOpen(false);
-            }
+        function handlePointerDown(event: MouseEvent | PointerEvent) {
+            const t = event.target as Node;
+            if (rootRef.current?.contains(t)) return;
+            if (menuRef.current?.contains(t)) return;
+            setOpen(false);
         }
 
-        document.addEventListener("mousedown", handleClickOutside);
-        return () =>
-            document.removeEventListener("mousedown", handleClickOutside);
+        function handleEscape(event: KeyboardEvent) {
+            if (event.key === "Escape") setOpen(false);
+        }
+
+        document.addEventListener("pointerdown", handlePointerDown);
+        document.addEventListener("keydown", handleEscape);
+        return () => {
+            document.removeEventListener("pointerdown", handlePointerDown);
+            document.removeEventListener("keydown", handleEscape);
+        };
     }, []);
+
     useEffect(() => {
         if (!open || !rootRef.current) {
             return;
@@ -126,7 +135,7 @@ function JournalCellComponent({
             const rect = rootRef.current?.getBoundingClientRect();
             if (!rect) return;
 
-            const menuHeight = 200; // примерно, можно уточнить
+            const menuHeight = 220;
             const spaceBelow = window.innerHeight - rect.bottom;
             const spaceAbove = rect.top;
 
@@ -135,7 +144,7 @@ function JournalCellComponent({
 
             setMenuPosition({
                 top: shouldOpenUp ? rect.top - menuHeight - 6 : rect.bottom + 6,
-                left: Math.max(8, rect.right - 60), // 208 ≈ ширина меню (w-52)
+                left: Math.max(8, rect.right - 208),
             });
         };
 
@@ -153,13 +162,21 @@ function JournalCellComponent({
             className={`py-2.5 px-1 text-center border-r border-secondary/5 select-none ${isToday ? "bg-accent/5" : ""}`}
         >
             <div className="relative" ref={rootRef}>
-                <button type="button" onClick={() => setOpen((prev) => !prev)}>
+                <button
+                    type="button"
+                    aria-expanded={open}
+                    aria-haspopup="listbox"
+                    className="touch-manipulation"
+                    onClick={() => setOpen((prev) => !prev)}
+                >
                     {content}
                 </button>
                 {open &&
                     menuPosition &&
                     createPortal(
                         <div
+                            ref={menuRef}
+                            role="listbox"
                             className="fixed z-[100] w-52 rounded-xl border border-secondary/20 bg-background/95 backdrop-blur-xl shadow-xl p-1"
                             style={{
                                 top: menuPosition.top,
@@ -173,7 +190,8 @@ function JournalCellComponent({
                                 <button
                                     key={`${studentId}-${dayIdx}-${option.marker}-${option.label}`}
                                     type="button"
-                                    className="w-full px-3 py-2 rounded-lg hover:bg-accent/10 text-left text-xs text-text/90 flex items-center justify-between"
+                                    role="option"
+                                    className="w-full px-3 py-2 rounded-lg hover:bg-accent/10 text-left text-xs text-text/90 flex items-center justify-between gap-2"
                                     onClick={() => {
                                         if (mode === "GRADES") {
                                             onGradeSelect(
@@ -191,7 +209,7 @@ function JournalCellComponent({
                                         setOpen(false);
                                     }}
                                 >
-                                    <span className="text-h6">
+                                    <span className="text-h6 shrink-0">
                                         {option.marker}
                                     </span>
                                     <span className="text-caption">

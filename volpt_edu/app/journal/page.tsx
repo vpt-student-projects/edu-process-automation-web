@@ -4,7 +4,11 @@ import { useState, useCallback, Suspense, useMemo, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import GlassCard from "@/components/GlassCard";
 import { JournalMode } from "@/types/types";
-import { JOURNAL_DAYS, TODAY_INDEX } from "@/hooks/useJournalDays";
+import {
+    JOURNAL_DAYS,
+    TODAY_INDEX,
+    apiDateToIsoKey,
+} from "@/hooks/useJournalDays";
 import {
     GradesState,
     AttendanceState,
@@ -32,13 +36,10 @@ import { PageSkeleton } from "@/components/shared/PageSkeleton";
 const ITEMS_PER_PAGE = 18;
 
 function toApiDate(date: Date): string {
-    return date.toISOString().slice(0, 10);
-}
-
-function toJournalLabel(date: string): string {
-    const [year, month, day] = date.split("-");
-    void year;
-    return `${day}.${month}`;
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const d = String(date.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
 }
 
 function getAttendanceTypeIdByStatus(
@@ -65,9 +66,7 @@ function JournalContent() {
     }));
 
     const [mode, setMode] = useState<JournalMode>("ATTENDANCE");
-    const [page, setPage] = useState(() =>
-        TODAY_INDEX >= 0 ? Math.floor(TODAY_INDEX / ITEMS_PER_PAGE) : 0,
-    );
+    const [page, setPage] = useState(0);
     const [filtersData, setFiltersData] = useState<JournalFiltersData | null>(
         null,
     );
@@ -78,19 +77,31 @@ function JournalContent() {
     const [students, setStudents] = useState<
         ReadonlyArray<{ id: string; name: string }>
     >([]);
-    const [lessonIdsByDay, setLessonIdsByDay] = useState<
-        Record<number, number>
-    >({});
+    /** Индексы дней в JOURNAL_DAYS, в которые по API есть занятия (пары) */
+    const [lessonDayIndices, setLessonDayIndices] = useState<number[]>([]);
     const [loadingFilters, setLoadingFilters] = useState(true);
     const [loadingJournal, setLoadingJournal] = useState(true);
     const [error, setError] = useState<ServiceError | null>(null);
 
-    const totalPages = Math.ceil(JOURNAL_DAYS.length / ITEMS_PER_PAGE);
-    const startDayIndex = page * ITEMS_PER_PAGE;
-    const currentDays = useMemo(
-        () => JOURNAL_DAYS.slice(startDayIndex, startDayIndex + ITEMS_PER_PAGE),
-        [startDayIndex],
+    const totalPages = useMemo(
+        () =>
+            lessonDayIndices.length === 0
+                ? 1
+                : Math.ceil(lessonDayIndices.length / ITEMS_PER_PAGE),
+        [lessonDayIndices.length],
     );
+
+    const { currentDays, columnDayIndices } = useMemo(() => {
+        const start = page * ITEMS_PER_PAGE;
+        const indices = lessonDayIndices.slice(
+            start,
+            start + ITEMS_PER_PAGE,
+        );
+        return {
+            columnDayIndices: indices,
+            currentDays: indices.map((i) => JOURNAL_DAYS[i]!),
+        };
+    }, [lessonDayIndices, page]);
 
     const selectedGroupData = useMemo(
         () =>
@@ -219,6 +230,7 @@ function JournalContent() {
 
             if (result.error) {
                 setError(result.error);
+                setLessonDayIndices([]);
                 setLoadingJournal(false);
                 return;
             }
@@ -235,7 +247,8 @@ function JournalContent() {
 
                 for (const grade of student.grades) {
                     const dayIndex = JOURNAL_DAYS.findIndex(
-                        (day) => day.label === toJournalLabel(grade.date),
+                        (day) =>
+                            day.isoKey === apiDateToIsoKey(grade.date),
                     );
 
                     if (dayIndex >= 0) {
@@ -249,7 +262,8 @@ function JournalContent() {
 
                 for (const item of student.attendances) {
                     const dayIndex = JOURNAL_DAYS.findIndex(
-                        (day) => day.label === toJournalLabel(item.date),
+                        (day) =>
+                            day.isoKey === apiDateToIsoKey(item.date),
                     );
 
                     if (dayIndex >= 0) {
@@ -263,13 +277,25 @@ function JournalContent() {
 
             for (const lesson of journal.lessons) {
                 const dayIndex = JOURNAL_DAYS.findIndex(
-                    (day) => day.label === toJournalLabel(lesson.date),
+                    (day) =>
+                        day.isoKey === apiDateToIsoKey(lesson.date),
                 );
 
                 if (dayIndex >= 0) {
                     nextLessonIdsByDay[dayIndex] = lesson.lessonId;
                 }
             }
+
+            const nextLessonDayIndices = Object.keys(nextLessonIdsByDay)
+                .map(Number)
+                .sort((a, b) => a - b);
+            setLessonDayIndices(nextLessonDayIndices);
+            const todayPos = nextLessonDayIndices.indexOf(TODAY_INDEX);
+            setPage(
+                todayPos >= 0
+                    ? Math.floor(todayPos / ITEMS_PER_PAGE)
+                    : 0,
+            );
 
             setStudents(
                 journal.students.map((student) => ({
@@ -279,7 +305,6 @@ function JournalContent() {
             );
             setGrades(nextGrades);
             setAttendance(nextAttendance);
-            setLessonIdsByDay(nextLessonIdsByDay);
             setError(null);
             setLoadingJournal(false);
         }
@@ -347,6 +372,8 @@ function JournalContent() {
                     },
                 }));
                 setError(saveResult.error);
+            } else {
+                setError(null);
             }
         },
         [grades, router, selectedGroupData, selectedSubject],
@@ -358,13 +385,21 @@ function JournalContent() {
             dayIdx: number,
             nextValue: AttendanceStatus,
         ) => {
-            const lessonId = lessonIdsByDay[dayIdx];
-            if (!lessonId || !filtersData) {
-                setError({
-                    code: "VALIDATION_ERROR",
-                    message:
-                        "Для выбранной даты нет урока по этой группе и предмету.",
-                });
+            if (!selectedGroupData || !filtersData) {
+                return;
+            }
+
+            const day = JOURNAL_DAYS[dayIdx];
+            if (!day) {
+                return;
+            }
+
+            const subject =
+                selectedGroupData.subjects.find(
+                    (item) => item.subjectName === selectedSubject,
+                ) ?? null;
+
+            if (!subject) {
                 return;
             }
 
@@ -379,8 +414,9 @@ function JournalContent() {
             }));
 
             const saveResult = await saveAttendanceToApi({
-                lessonId,
+                subjectId: subject.subjectId,
                 studentId: Number(studentId),
+                date: day.isoKey,
                 typeId: getAttendanceTypeIdByStatus(
                     filtersData.attendanceTypes,
                     nextValue,
@@ -401,9 +437,11 @@ function JournalContent() {
                     },
                 }));
                 setError(saveResult.error);
+            } else {
+                setError(null);
             }
         },
-        [attendance, filtersData, lessonIdsByDay, router],
+        [attendance, filtersData, router, selectedGroupData, selectedSubject],
     );
 
     return (
@@ -479,6 +517,13 @@ function JournalContent() {
                                     description="Для выбранной группы пока не найдено студентов."
                                 />
                             </div>
+                        ) : lessonDayIndices.length === 0 ? (
+                            <div className="p-4">
+                                <PageState
+                                    title="Нет занятий в периоде"
+                                    description="В выбранном диапазоне дат нет пар по этой группе и предмету — колонки с датами не отображаются."
+                                />
+                            </div>
                         ) : (
                             <>
                                 <div className="flex-1 overflow-auto min-h-0 custom-scrollbar">
@@ -486,7 +531,7 @@ function JournalContent() {
                                         mode={mode}
                                         students={students}
                                         currentDays={currentDays}
-                                        startDayIndex={startDayIndex}
+                                        columnDayIndices={columnDayIndices}
                                         grades={grades}
                                         attendance={attendance}
                                         onGradeSelect={handleGradeSelect}

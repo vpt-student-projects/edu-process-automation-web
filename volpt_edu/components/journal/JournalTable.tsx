@@ -2,7 +2,7 @@
 
 import { memo } from "react";
 import { JournalMode } from "@/types/types";
-import { JournalDay, todayStr } from "@/hooks/useJournalDays";
+import { JournalDay, todayIsoKey } from "@/hooks/useJournalDays";
 import { JournalCell } from "./JournalCell";
 import {
     GradesState,
@@ -20,7 +20,8 @@ interface Props {
     mode: JournalMode;
     students: ReadonlyArray<Student>;
     currentDays: JournalDay[];
-    startDayIndex: number;
+    /** Глобальные индексы в JOURNAL_DAYS для каждой колонки (длина = currentDays.length) */
+    columnDayIndices: number[];
     grades: GradesState;
     attendance: AttendanceState;
     onGradeSelect: (studentId: string, dayIdx: number, grade: Grade) => void;
@@ -35,7 +36,7 @@ interface RowProps {
     mode: JournalMode;
     student: Student;
     currentDays: JournalDay[];
-    startDayIndex: number;
+    columnDayIndices: number[];
     studentGrades?: Record<number, Grade>;
     studentAttendance?: Record<number, AttendanceStatus>;
     onGradeSelect: (studentId: string, dayIdx: number, grade: Grade) => void;
@@ -50,7 +51,7 @@ const JournalRow = memo(function JournalRow({
     mode,
     student,
     currentDays,
-    startDayIndex,
+    columnDayIndices,
     studentGrades,
     studentAttendance,
     onGradeSelect,
@@ -64,8 +65,8 @@ const JournalRow = memo(function JournalRow({
                 </span>
             </td>
             {currentDays.map((day, relIdx) => {
-                const actualIdx = startDayIndex + relIdx;
-                const isToday = day.label === todayStr;
+                const actualIdx = columnDayIndices[relIdx]!;
+                const isToday = day.isoKey === todayIsoKey;
                 return (
                     <JournalCell
                         key={actualIdx}
@@ -88,7 +89,7 @@ export function JournalTable({
     mode,
     students,
     currentDays,
-    startDayIndex,
+    columnDayIndices,
     grades,
     attendance,
     onGradeSelect,
@@ -105,11 +106,11 @@ export function JournalTable({
                         Студент
                     </th>
                     {currentDays.map((day, i) => {
-                        const isToday = day.label === todayStr;
+                        const isToday = day.isoKey === todayIsoKey;
                         const isSat = day.fullDate.getDay() === 6;
                         return (
                             <th
-                                key={i}
+                                key={columnDayIndices[i] ?? i}
                                 className={`p-2 backdrop-blur-2xl bg-background/60 border-b border-secondary/5 text-center align-bottom min-w-[50px] sm:min-w-[56px] max-w-[60px] ${isToday ? "bg-accent/10" : ""}`}
                             >
                                 <div className="flex flex-col items-center justify-end gap-0.5 h-14">
@@ -145,7 +146,7 @@ export function JournalTable({
                         mode={mode}
                         student={student}
                         currentDays={currentDays}
-                        startDayIndex={startDayIndex}
+                        columnDayIndices={columnDayIndices}
                         studentGrades={grades[student.id]}
                         studentAttendance={attendance[student.id]}
                         onGradeSelect={onGradeSelect}

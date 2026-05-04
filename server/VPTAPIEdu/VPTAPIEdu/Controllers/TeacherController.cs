@@ -126,9 +126,10 @@ namespace VPTAPIEdu.Controllers
             var dateFrom = from ?? DateOnly.FromDateTime(DateTime.Today.AddMonths(-3));
             var dateTo = to ?? DateOnly.FromDateTime(DateTime.Today.AddMonths(1));
 
+            // Доступ уже проверен через UserGroupSubjects; уроки берём по группе и предмету.
+            // Иначе строки из синхронизации с другим UserId не попадали в журнал.
             var lessons = await _context.Lessons
                 .Where(l =>
-                    l.UserId == userId &&
                     l.GroupId == groupId &&
                     l.SubjectId == subjectId &&
                     l.Date >= dateFrom &&
