@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import LandingPage from "@/components/LandingPage";
 import LoginPage from "@/components/LoginPage";
-import { hasAuthSession } from "@/lib/auth/session";
+import { getStoredUser, hasAuthSession, isAdminRole } from "@/lib/auth/session";
 
 export default function AuthSplitPage() {
     const [activeTab, setActiveTab] = useState<"landing" | "login">("landing");
@@ -13,7 +13,10 @@ export default function AuthSplitPage() {
 
     useEffect(() => {
         if (hasSession) {
-            router.replace("/schedule");
+            const user = getStoredUser();
+            router.replace(
+                isAdminRole(user?.role) ? "/admin" : "/schedule",
+            );
         }
     }, [hasSession, router]);
 

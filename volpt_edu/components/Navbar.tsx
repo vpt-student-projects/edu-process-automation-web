@@ -3,14 +3,19 @@
 import React, { useCallback } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Calendar, Users, LogOut, BookOpen } from "lucide-react";
-import { clearAuthSession } from "@/lib/auth/session";
+import { Calendar, Users, LogOut, BookOpen, LayoutDashboard } from "lucide-react";
+import { clearAuthSession, getStoredUser, isAdminRole } from "@/lib/auth/session";
 import GlassCard from "@/components/GlassCard";
 
-const navItems = [
+const teacherNavItems = [
     { href: "/schedule", icon: Calendar, label: "Расписание" },
     { href: "/journal", icon: BookOpen, label: "Журнал" },
     { href: "/groups", icon: Users, label: "Группы" },
+];
+
+/** У администратора только панель админки (остальные разделы — для преподавателей). */
+const adminNavItems = [
+    { href: "/admin", icon: LayoutDashboard, label: "Админ" },
 ];
 
 const Navbar: React.FC = () => {
@@ -23,6 +28,10 @@ const Navbar: React.FC = () => {
     }, [router]);
 
     if (pathname === "/" || pathname === "/login") return null;
+
+    const navItems = isAdminRole(getStoredUser()?.role)
+        ? adminNavItems
+        : teacherNavItems;
 
     return (
         <div className="fixed inset-x-0 bottom-5 z-50 flex justify-center">

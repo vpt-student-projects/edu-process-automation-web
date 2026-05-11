@@ -32,6 +32,7 @@ import {
 } from "@/lib/services/educationData";
 import { PageState } from "@/components/shared/PageState";
 import { PageSkeleton } from "@/components/shared/PageSkeleton";
+import { getStoredUser, isAdminRole } from "@/lib/auth/session";
 
 const ITEMS_PER_PAGE = 18;
 
@@ -60,6 +61,13 @@ function getAttendanceTypeIdByStatus(
 function JournalContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
+
+    useEffect(() => {
+        const user = getStoredUser();
+        if (isAdminRole(user?.role)) {
+            router.replace("/admin");
+        }
+    }, [router]);
     const [initialQuery] = useState(() => ({
         group: searchParams.get("group"),
         subject: searchParams.get("subject"),

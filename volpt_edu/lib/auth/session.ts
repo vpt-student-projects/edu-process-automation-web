@@ -62,3 +62,24 @@ export function getRefreshToken(): string | null {
 export function hasAuthSession(): boolean {
     return Boolean(getAccessToken() && getRefreshToken());
 }
+
+export function getStoredUser(): StoredUser | null {
+    if (typeof window === "undefined") {
+        return null;
+    }
+
+    const raw = window.localStorage.getItem(USER_STORAGE_KEY);
+    if (!raw) {
+        return null;
+    }
+
+    try {
+        return JSON.parse(raw) as StoredUser;
+    } catch {
+        return null;
+    }
+}
+
+export function isAdminRole(role: string | undefined | null): boolean {
+    return (role ?? "").trim().toLowerCase() === "admin";
+}

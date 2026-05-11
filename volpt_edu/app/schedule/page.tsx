@@ -13,6 +13,7 @@ import {
 import type { DayTemplate } from "@/types/types";
 import { PageState } from "@/components/shared/PageState";
 import { PageSkeleton } from "@/components/shared/PageSkeleton";
+import { getStoredUser, isAdminRole } from "@/lib/auth/session";
 
 export default function SchedulePage() {
     const [weekOffset, setWeekOffset] = useState(0);
@@ -24,6 +25,13 @@ export default function SchedulePage() {
     const router = useRouter();
     const { dates, isToday, formatDate, weekRange, weekStart } =
         useWeekDates(weekOffset);
+
+    useEffect(() => {
+        const user = getStoredUser();
+        if (isAdminRole(user?.role)) {
+            router.replace("/admin");
+        }
+    }, [router]);
 
     useEffect(() => {
         let isMounted = true;

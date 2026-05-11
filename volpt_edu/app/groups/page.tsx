@@ -12,6 +12,7 @@ import { PageState } from "@/components/shared/PageState";
 import type { GroupSummary } from "@/types/types";
 import { useRouter } from "next/navigation";
 import { PageSkeleton } from "@/components/shared/PageSkeleton";
+import { getStoredUser, isAdminRole } from "@/lib/auth/session";
 
 export default function GroupsPage() {
     const [sortBy, setSortBy] = useState<SortOption>("NAME");
@@ -19,6 +20,13 @@ export default function GroupsPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<ServiceError | null>(null);
     const router = useRouter();
+
+    useEffect(() => {
+        const user = getStoredUser();
+        if (isAdminRole(user?.role)) {
+            router.replace("/admin");
+        }
+    }, [router]);
 
     useEffect(() => {
         let isMounted = true;

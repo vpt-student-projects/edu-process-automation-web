@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeClosed, Lock, User } from "lucide-react";
 import LiquidButton from "@/components/LiquidButton";
 import { getStoredApiBaseUrl } from "@/lib/config/api";
-import { saveAuthSession } from "@/lib/auth/session";
+import { isAdminRole, saveAuthSession } from "@/lib/auth/session";
 import { loginUser } from "@/lib/services/auth";
 
 export default function LoginPage() {
@@ -30,7 +30,9 @@ export default function LoginPage() {
             });
 
             saveAuthSession(session);
-            router.push("/schedule");
+            router.push(
+                isAdminRole(session.role) ? "/admin" : "/schedule",
+            );
         } catch (err) {
             if (err instanceof Error && err.message === "INVALID_CREDENTIALS") {
                 setError("Неверный логин или пароль");
