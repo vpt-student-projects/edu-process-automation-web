@@ -1,4 +1,3 @@
-// hooks/useJournalDays.ts
 export type JournalDay = {
     /** YYYY-MM-DD в локальной зоне, уникален для индекса и сопоставления с API */
     isoKey: string;
@@ -57,4 +56,6 @@ export const todayIsoKey = `${now.getFullYear()}-${pad2(now.getMonth() + 1)}-${p
 /** @deprecated используйте todayIsoKey и сравнение по isoKey */
 export const todayStr = `${pad2(now.getDate())}.${pad2(now.getMonth() + 1)}`;
 
-export const TODAY_INDEX = JOURNAL_DAYS.findIndex((d) => d.isoKey === todayIsoKey);
+export const TODAY_INDEX = JOURNAL_DAYS.findIndex(
+    (d) => d.isoKey === todayIsoKey,
+);

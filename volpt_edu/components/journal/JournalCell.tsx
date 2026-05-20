@@ -99,7 +99,7 @@ function JournalCellComponent({
             },
             {
                 value: "ОТ" as AttendanceStatus,
-                label: "Отработка",
+                label: "Отпросился",
                 marker: "ОТ",
             },
         ],
