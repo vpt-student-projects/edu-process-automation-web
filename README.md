@@ -29,9 +29,11 @@
 
 ### 1.3 Стек технологий
 **Фронтенд:**
-- Next.js 16.1.6
-- Lucide React 0.563.0
-- TailwindCSS 3.4.19
+- Framework: Next.js 16
+- UI: React 19
+- Language: TypeScript 5
+- Styling: Tailwind CSS
+- Icons: Lucide React
 
 **Бекенд:**
 - ASP.Net
