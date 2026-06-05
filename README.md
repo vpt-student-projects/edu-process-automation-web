@@ -48,23 +48,31 @@
 
 - Страница авторизации
   
-<img src = "images/Login.jpg"/>
+<img src = "images/login.png"/>
 
 - Страница расписания
   
-<img src = "images/Timetable.png"/>
+<img src = "images/timetable.png"/>
 
 - Страница посещаемости
   
-<img src = "images/Attendance.png"/>
+<img src = "images/attendance.png"/>
 
 - Страница успеваемости
   
-<img src = "images/Grades.png"/>
+<img src = "images/grades.png"/>
 
 - Страница Групп
   
-<img src = "images/Groups.png"/>
+<img src = "images/group.png"/>
+
+- Админ панель
+  
+<img src = "images/admin1.png"/>
+
+<img src = "images/admin2.png"/>
+
+<img src = "images/admin3.png"/>
 
 ## 3. Бекенд
 
