@@ -177,7 +177,7 @@ function JournalCellComponent({
                         <div
                             ref={menuRef}
                             role="listbox"
-                            className="fixed z-[100] w-52 rounded-xl border border-secondary/20 bg-background/95 backdrop-blur-xl shadow-xl p-1"
+                            className="fixed z-[100] w-52 rounded-xl border border-secondary/20 bg-background/[0.08] backdrop-blur-xl shadow-md p-1"
                             style={{
                                 top: menuPosition.top,
                                 left: menuPosition.left,

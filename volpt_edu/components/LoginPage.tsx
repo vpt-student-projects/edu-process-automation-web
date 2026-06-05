@@ -30,9 +30,7 @@ export default function LoginPage() {
             });
 
             saveAuthSession(session);
-            router.push(
-                isAdminRole(session.role) ? "/admin" : "/schedule",
-            );
+            router.push(isAdminRole(session.role) ? "/admin" : "/schedule");
         } catch (err) {
             if (err instanceof Error && err.message === "INVALID_CREDENTIALS") {
                 setError("Неверный логин или пароль");
@@ -66,7 +64,7 @@ export default function LoginPage() {
                             onChange={(event) => setLogin(event.target.value)}
                             required
                             className="block w-full text-body pl-12 pr-4 py-4 bg-primary/10 border border-primary/15 rounded-2xl text-text/50 group-focus-within:text-secondary group-hover:border-accent placeholder-secondary/60 focus:outline-none focus:ring-1 focus:ring-accent/85 transition-all"
-                            placeholder="логин229"
+                            placeholder="example@example.com"
                         />
                     </div>
                 </div>

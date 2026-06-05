@@ -1,10 +1,4 @@
-export type AttendanceStatus =
-    | null
-    | "НБ"
-    | "ОП"
-    | "УВ"
-    | "УШ"
-    | "ОТ";
+export type AttendanceStatus = null | "НБ" | "ОП" | "УВ" | "УШ" | "ОТ";
 export type Grade = 2 | 3 | 4 | 5 | null;
 export type GradesState = Record<string, Record<number, Grade>>;
 export type AttendanceState = Record<string, Record<number, AttendanceStatus>>;
@@ -39,11 +33,11 @@ export function statusStyle(s: AttendanceStatus): string {
         case "ОП":
             return "text-orange-400 bg-orange-500/15 border-orange-500/30";
         case "УВ":
-            return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+            return "bg-blue-500/20 text-blue-500 border-blue-500/30";
         case "УШ":
-            return "bg-amber-500/20 text-amber-300 border-amber-500/30";
+            return "bg-amber-500/20 text-amber-500 border-amber-500/30";
         case "ОТ":
-            return "bg-purple-500/20 text-purple-400 border-purple-500/30";
+            return "bg-purple-500/20 text-purple-500 border-purple-500/30";
         default:
             return "bg-transparent text-primary/20 border-transparent";
     }
@@ -53,7 +47,7 @@ export function gradeStyle(g: Grade): string {
     if (!g) return "text-primary/20";
     if (g >= 5)
         return "text-emerald-400 bg-emerald-500/15 border-emerald-500/30";
-    if (g === 4) return "text-green-400 bg-green-500/15 border-green-500/30";
+    if (g === 4) return "text-blue-400 bg-blue-500/15 border-blue-500/30";
     if (g === 3) return "text-orange-400 bg-orange-500/15 border-orange-500/30";
     return "text-red-400 bg-red-500/15 border-red-500/30";
 }
