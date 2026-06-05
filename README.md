@@ -29,7 +29,9 @@
 
 ### 1.3 Стек технологий
 **Фронтенд:**
-- nextjs
+- Next.js 16.1.6
+- Lucide React 0.563.0
+- TailwindCSS 3.4.19
 
 **Бекенд:**
 - ASP.Net
