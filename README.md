@@ -38,7 +38,7 @@
 **Бекенд:**
 - API: ASP.Net
 - ORM: Entity Framework Core
-- Password: BCrypt
+- Encrypt: BCrypt
 - DB: PostgreSQL 16.11
 - DB update script: Python 3.12.3
 
