@@ -29,18 +29,18 @@
 
 ### 1.3 Стек технологий
 **Фронтенд:**
-- Framework: Next.js 16
-- UI: React 19
-- Language: TypeScript 5
-- Styling: Tailwind CSS
-- Icons: Lucide React
+- Next.js 16
+- React 19
+- TypeScript 5
+- Tailwind CSS
+- Lucide React
 
 **Бекенд:**
-- API: ASP.Net
-- ORM: Entity Framework Core
-- Encrypt: BCrypt
-- DB: PostgreSQL 16.11
-- DB update script: Python 3.12.3
+- ASP.Net
+- Entity Framework Core
+- BCrypt
+- PostgreSQL 16.11
+- Python 3.12.3
 
 ---
 
