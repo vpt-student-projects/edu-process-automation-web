@@ -79,4 +79,4 @@
 
 ER диаграмма базы данных
 
-<img src = "images/ERD.jpg"/>
+<img src = "images/бдиплом.drawio.png"/>
