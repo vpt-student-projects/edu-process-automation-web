@@ -36,11 +36,11 @@
 - Icons: Lucide React
 
 **Бекенд:**
-- ASP.Net
-- Entity Framework Core
-- BCrypt
-- PostgreSQL 16.11
-- Python 3.12.3
+- API: ASP.Net
+- ORM: Entity Framework Core
+- Password: BCrypt
+- DB: PostgreSQL 16.11
+- DB update script: Python 3.12.3
 
 ---
 
