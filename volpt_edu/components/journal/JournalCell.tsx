@@ -44,7 +44,7 @@ function JournalCellComponent({
     } | null>(null);
 
     const base =
-        "inline-flex items-center justify-center w-8 h-8 rounded-lg font-bold border transition-all duration-150 hover:scale-110 active:scale-95";
+        "inline-flex h-9 w-9 items-center justify-center rounded-lg border font-bold transition-all duration-150 hover:scale-110 active:scale-95 sm:h-8 sm:w-8";
     const empty =
         "text-primary/15 border-transparent hover:border-primary/10 hover:text-primary/30";
 
@@ -166,7 +166,7 @@ function JournalCellComponent({
                     type="button"
                     aria-expanded={open}
                     aria-haspopup="listbox"
-                    className="touch-manipulation"
+                    className="touch-manipulation p-0.5"
                     onClick={() => setOpen((prev) => !prev)}
                 >
                     {content}

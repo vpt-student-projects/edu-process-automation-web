@@ -71,11 +71,11 @@ export default function GroupsPage() {
     }, []);
 
     return (
-        <div className="p-4 md:p-6 mx-auto w-full mb-24">
-            <div className="mb-4 flex justify-between items-center">
-                <div className="pl-2 flex items-center gap-3">
+        <div className="mx-auto mb-28 w-full p-3 sm:p-4 md:p-6">
+            <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex min-w-0 items-center gap-3 sm:pl-2">
                     <svg
-                        className="w-[120px] md:w-[100px] sm:w-[80px] h-auto flex-shrink-0"
+                        className="h-auto w-16 flex-shrink-0 sm:w-20 lg:w-[120px]"
                         viewBox="0 0 88 32"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
@@ -118,10 +118,10 @@ export default function GroupsPage() {
                         />
                     </svg>
                     <div>
-                        <h2 className="text-text text-h2 drop-shadow-sm">
+                        <h2 className="text-h4 text-text drop-shadow-sm sm:text-h2">
                             Мои группы
                         </h2>
-                        <p className="text-text/85 text-body">
+                        <p className="text-body-sm text-text/75 sm:text-body">
                             Список групп и предметов
                         </p>
                     </div>

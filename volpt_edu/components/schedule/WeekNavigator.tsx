@@ -37,7 +37,7 @@ export function WeekNavigator({
         }
 
         const rect = triggerRef.current.getBoundingClientRect();
-        const pickerWidth = 280;
+        const pickerWidth = Math.min(320, window.innerWidth - 16);
         const viewportPadding = 8;
 
         const centeredLeft =
@@ -93,10 +93,10 @@ export function WeekNavigator({
     return (
         <>
             <GlassCard
-                className="!rounded-full border hover:border-accent "
+                className="w-full !rounded-[1.5rem] border hover:border-accent sm:w-auto sm:!rounded-full"
                 intensity="low"
             >
-                <div className="flex items-center p-1">
+                <div className="flex items-center justify-between p-1">
                     <button
                         onClick={onPrev}
                         className={`${iconActionButtonClassName} group`}
@@ -113,7 +113,7 @@ export function WeekNavigator({
 
                             setIsOpen((prev) => !prev);
                         }}
-                        className={`${pillActionButtonClassName} text-body text-center tracking-wide whitespace-nowrap`}
+                        className={`${pillActionButtonClassName} min-w-0 flex-1 px-3 text-center text-body-sm tracking-wide sm:flex-none sm:text-body`}
                     >
                         {weekRange}
                     </button>

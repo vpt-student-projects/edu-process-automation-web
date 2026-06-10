@@ -443,11 +443,11 @@ function JournalContent() {
     );
 
     return (
-        <div className="flex flex-col p-4 md:p-6 mx-auto w-full gap-4">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <div className="pl-2 min-w-0 overflow-hidden flex items-center gap-3">
+        <div className="mx-auto flex w-full flex-col gap-4 p-3 sm:p-4 md:p-6">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div className="flex min-w-0 items-center gap-3 overflow-hidden sm:pl-2">
                     <svg
-                        className="w-[120px] md:w-[100px] sm:w-[80px] h-auto flex-shrink-0"
+                        className="h-auto w-16 flex-shrink-0 sm:w-20 lg:w-[120px]"
                         viewBox="0 0 88 32"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
@@ -490,10 +490,10 @@ function JournalContent() {
                         />
                     </svg>
                     <div className="min-w-0 overflow-hidden">
-                        <h2 className="text-text text-h2 drop-shadow-sm">
+                        <h2 className="text-h4 text-text drop-shadow-sm sm:text-h2">
                             Журнал
                         </h2>
-                        <div className="flex items-baseline gap-1 text-body overflow-hidden">
+                        <div className="flex items-baseline gap-1 overflow-hidden text-body-sm sm:text-body">
                             <span className="text-text/85 whitespace-nowrap shrink-0">
                                 Посещаемость и оценки
                             </span>
@@ -537,7 +537,7 @@ function JournalContent() {
                     />
 
                     <GlassCard
-                        className="flex-1 overflow-hidden flex flex-col min-h-0 mb-24"
+                        className="mb-28 flex min-h-0 flex-1 flex-col overflow-hidden"
                         intensity="medium"
                     >
                         {error ? (

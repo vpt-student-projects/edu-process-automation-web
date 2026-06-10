@@ -40,13 +40,15 @@ const btnGhost =
     "rounded-xl px-4 py-2.5 text-body-sm font-medium border border-primary/20 text-text/90 hover:bg-primary/10 transition-colors disabled:opacity-40";
 /** Крупная зона нажатия — для нижнего блока, чтобы не пересекалась с навбаром */
 const btnAccount =
-    "rounded-xl min-h-12 px-5 py-3 text-body-sm font-semibold border-2 border-accent/50 bg-accent/15 text-text shadow-md hover:bg-accent/25 active:scale-[0.99] transition-all disabled:opacity-40 relative z-10 cursor-pointer w-full sm:w-auto sm:min-w-[220px]";
+    "rounded-xl min-h-12 px-5 py-3 text-body-sm font-semibold border-2 border-accent/50 bg-accent/15 text-text hover:bg-accent/25 active:scale-[0.99] transition-all disabled:opacity-40 relative z-10 cursor-pointer w-full sm:w-auto sm:min-w-[220px]";
 const btnDanger =
     "rounded-xl px-3 py-1.5 text-caption font-medium text-red-300 border border-red-400/30 hover:bg-red-500/15 transition-colors";
 
 function SectionTitle({ children }: { children: ReactNode }) {
     return (
-        <h2 className="text-h3 text-text font-semibold mb-3 pl-1">{children}</h2>
+        <h2 className="text-h3 text-text font-semibold mb-3 pl-1">
+            {children}
+        </h2>
     );
 }
 
@@ -104,18 +106,21 @@ export default function AdminPage() {
         useState<Record<FlashKey, Flash | null>>(emptyFlashes);
     const flashTimers = useRef<Partial<Record<FlashKey, number>>>({});
 
-    const flash = useCallback((key: FlashKey, kind: "ok" | "err", text: string) => {
-        const prev = flashTimers.current[key];
-        if (prev !== undefined) {
-            window.clearTimeout(prev);
-        }
-        setFlashes((p) => ({ ...p, [key]: { kind, text } }));
-        const ms = kind === "ok" ? FLASH_OK_MS : FLASH_ERR_MS;
-        flashTimers.current[key] = window.setTimeout(() => {
-            setFlashes((p) => ({ ...p, [key]: null }));
-            delete flashTimers.current[key];
-        }, ms);
-    }, []);
+    const flash = useCallback(
+        (key: FlashKey, kind: "ok" | "err", text: string) => {
+            const prev = flashTimers.current[key];
+            if (prev !== undefined) {
+                window.clearTimeout(prev);
+            }
+            setFlashes((p) => ({ ...p, [key]: { kind, text } }));
+            const ms = kind === "ok" ? FLASH_OK_MS : FLASH_ERR_MS;
+            flashTimers.current[key] = window.setTimeout(() => {
+                setFlashes((p) => ({ ...p, [key]: null }));
+                delete flashTimers.current[key];
+            }, ms);
+        },
+        [],
+    );
 
     const [students, setStudents] = useState<AdminStudentRow[]>([]);
     const [teachers, setTeachers] = useState<AdminTeacherRow[]>([]);
@@ -148,9 +153,7 @@ export default function AdminPage() {
         if (!q) {
             return [];
         }
-        return students.filter((s) =>
-            s.fullName.toLowerCase().includes(q),
-        );
+        return students.filter((s) => s.fullName.toLowerCase().includes(q));
     }, [students, studentSearchQuery]);
 
     const filteredTeachers = useMemo(() => {
@@ -158,9 +161,7 @@ export default function AdminPage() {
         if (!q) {
             return [];
         }
-        return teachers.filter((t) =>
-            t.fullName.toLowerCase().includes(q),
-        );
+        return teachers.filter((t) => t.fullName.toLowerCase().includes(q));
     }, [teachers, teacherSearchQuery]);
 
     const filteredSubjects = useMemo(() => {
@@ -168,29 +169,26 @@ export default function AdminPage() {
         if (!q) {
             return [];
         }
-        return subjects.filter((s) =>
-            s.name.toLowerCase().includes(q),
-        );
+        return subjects.filter((s) => s.name.toLowerCase().includes(q));
     }, [subjects, subjectSearchQuery]);
 
-    useEffect(() => {
+    const handleTeacherSearchChange = useCallback((value: string) => {
+        setTeacherSearchQuery(value);
         setSelectedTeacher(null);
-    }, [teacherSearchQuery]);
+    }, []);
 
-    useEffect(() => {
+    const handleSubjectSearchChange = useCallback((value: string) => {
+        setSubjectSearchQuery(value);
         setSelectedSubject(null);
-    }, [subjectSearchQuery]);
+    }, []);
 
-    useEffect(() => {
-        if (selectedSubject) {
-            setEditSubjectName(selectedSubject.name);
-            setEditSubjectHours(
-                selectedSubject.total_hours != null
-                    ? String(selectedSubject.total_hours)
-                    : "",
-            );
-        }
-    }, [selectedSubject]);
+    const handleSubjectSelect = useCallback((subject: AdminSubjectRow) => {
+        setSelectedSubject(subject);
+        setEditSubjectName(subject.name);
+        setEditSubjectHours(
+            subject.total_hours != null ? String(subject.total_hours) : "",
+        );
+    }, []);
 
     const reloadAll = useCallback(async () => {
         const [s, t, sub] = await Promise.all([
@@ -218,10 +216,7 @@ export default function AdminPage() {
             setSubjects(
                 sub.data.map((row) => ({
                     ...row,
-                    total_hours:
-                        row.total_hours ??
-                        row.totalHours ??
-                        null,
+                    total_hours: row.total_hours ?? row.totalHours ?? null,
                 })),
             );
         } else if (sub.unauthorized) {
@@ -242,8 +237,11 @@ export default function AdminPage() {
             router.replace("/schedule");
             return;
         }
-        setReady(true);
-        void reloadAll();
+        const readyTimer = window.setTimeout(() => {
+            setReady(true);
+            void reloadAll();
+        }, 0);
+        return () => window.clearTimeout(readyTimer);
     }, [router, reloadAll]);
 
     useEffect(() => {
@@ -370,8 +368,7 @@ export default function AdminPage() {
             : null;
         const r = await adminAddSubject({
             name: newSubjectName.trim(),
-            totalHours:
-                hours !== null && !Number.isNaN(hours) ? hours : null,
+            totalHours: hours !== null && !Number.isNaN(hours) ? hours : null,
         });
         if (!r.ok) {
             if (r.unauthorized) {
@@ -397,8 +394,7 @@ export default function AdminPage() {
             return;
         }
         const hRaw = editSubjectHours.trim();
-        const totalHours =
-            hRaw === "" ? null : Number.parseInt(hRaw, 10);
+        const totalHours = hRaw === "" ? null : Number.parseInt(hRaw, 10);
         const r = await adminUpdateSubject(selectedSubject.id, {
             name,
             totalHours:
@@ -501,9 +497,7 @@ export default function AdminPage() {
     return (
         <div className="flex flex-col gap-5 p-4 md:p-8 pb-44 md:pb-52 mx-auto w-full max-w-3xl relative z-[5]">
             <header className="pl-1">
-                <h1 className="text-h2 text-text font-bold drop-shadow-sm">
-                    Админ-панель
-                </h1>
+                <h1 className="text-h2 text-text font-bold">Админ-панель</h1>
                 <p className="text-body text-text/70 mt-1">
                     Управление студентами, преподавателями и предметами
                 </p>
@@ -513,9 +507,8 @@ export default function AdminPage() {
             <GlassCard intensity="medium" className="p-4 md:p-5">
                 <SectionTitle>Импорт студентов</SectionTitle>
                 <p className="text-caption text-text/60 mb-2">
-                    Каждая строка:{" "}
-                    <span className="text-accent/90">ФИО</span>, разделитель
-                    запятая или таб,{" "}
+                    Каждая строка: <span className="text-accent/90">ФИО</span>,
+                    разделитель запятая или таб,{" "}
                     <span className="text-accent/90">название группы</span>.
                     Группа создаётся при отсутствии.
                 </p>
@@ -523,7 +516,9 @@ export default function AdminPage() {
                     className={`${inputClass} min-h-[120px] resize-y font-mono text-caption`}
                     value={importText}
                     onChange={(e) => setImportText(e.target.value)}
-                    placeholder={"Иванов Иван Иванович,ИВТ-21\nПетров Пётр,ИВТ-21"}
+                    placeholder={
+                        "Иванов Иван Иванович,ИВТ-21\nПетров Пётр,ИВТ-21"
+                    }
                 />
                 <BlockNotice flash={flashes.import} />
                 <button
@@ -663,9 +658,7 @@ export default function AdminPage() {
                             type="password"
                             className={`${inputClass} mt-1`}
                             value={teacherPassword}
-                            onChange={(e) =>
-                                setTeacherPassword(e.target.value)
-                            }
+                            onChange={(e) => setTeacherPassword(e.target.value)}
                             placeholder="по умолчанию default123"
                         />
                     </div>
@@ -680,12 +673,16 @@ export default function AdminPage() {
                 </button>
 
                 <div className="mt-6 border-t border-primary/10 pt-5">
-                    <label className={labelClass}>Поиск преподавателя по ФИО</label>
+                    <label className={labelClass}>
+                        Поиск преподавателя по ФИО
+                    </label>
                     <input
                         type="search"
                         className={`${inputClass} mt-1`}
                         value={teacherSearchQuery}
-                        onChange={(e) => setTeacherSearchQuery(e.target.value)}
+                        onChange={(e) =>
+                            handleTeacherSearchChange(e.target.value)
+                        }
                         placeholder="Например: Петров"
                         autoComplete="off"
                     />
@@ -837,7 +834,7 @@ export default function AdminPage() {
                     type="search"
                     className={`${inputClass} mt-1`}
                     value={subjectSearchQuery}
-                    onChange={(e) => setSubjectSearchQuery(e.target.value)}
+                    onChange={(e) => handleSubjectSearchChange(e.target.value)}
                     placeholder="Например: Математика"
                     autoComplete="off"
                 />
@@ -858,7 +855,7 @@ export default function AdminPage() {
                                 <button
                                     key={sub.id}
                                     type="button"
-                                    onClick={() => setSelectedSubject(sub)}
+                                    onClick={() => handleSubjectSelect(sub)}
                                     className={`w-full rounded-lg px-3 py-2.5 text-left transition-colors ${
                                         active
                                             ? "bg-accent/20 border border-accent/40"
@@ -912,9 +909,7 @@ export default function AdminPage() {
                             <button
                                 type="button"
                                 className={btnPrimary}
-                                onClick={() =>
-                                    void handleSaveSelectedSubject()
-                                }
+                                onClick={() => void handleSaveSelectedSubject()}
                             >
                                 Сохранить изменения
                             </button>
@@ -922,9 +917,7 @@ export default function AdminPage() {
                                 type="button"
                                 className={btnDanger}
                                 onClick={() =>
-                                    void handleDeleteSubject(
-                                        selectedSubject.id,
-                                    )
+                                    void handleDeleteSubject(selectedSubject.id)
                                 }
                             >
                                 Удалить предмет
@@ -975,10 +968,7 @@ export default function AdminPage() {
                         onClick={() => {
                             const u = getStoredUser();
                             if (u) {
-                                void handleChangePassword(
-                                    u.userId,
-                                    "account",
-                                );
+                                void handleChangePassword(u.userId, "account");
                             }
                         }}
                     >

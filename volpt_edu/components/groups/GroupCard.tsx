@@ -17,12 +17,14 @@ function GroupCardComponent({ group }: Props) {
             className="transition-all overflow-visible"
             intensity="medium"
         >
-            <div className="w-full p-6 flex items-center gap-4">
-                <div className="p-3 rounded-2xl bg-accent/85">
+            <div className="flex w-full items-center gap-3 p-4 sm:gap-4 sm:p-6">
+                <div className="rounded-2xl bg-accent/85 p-2.5 sm:p-3">
                     <Users className="w-6 h-6 text-background" />
                 </div>
                 <div>
-                    <h3 className="text-h4 text-text">{group.name}</h3>
+                    <h3 className="text-h5 text-text sm:text-h4">
+                        {group.name}
+                    </h3>
                     <p className="text-body-sm text-text/50">
                         {group.subjects.length} предмета
                     </p>
@@ -42,10 +44,10 @@ function GroupCardComponent({ group }: Props) {
                                     group: group.name,
                                     subject: sub,
                                 })}
-                                className="flex items-center gap-2 p-3 rounded-xl bg-primary/[0.05] border border-primary/15 hover:bg-accent/15 hover:border-accent/30 group transition-colors"
+                                className="flex items-start gap-2 rounded-xl p-3 bg-primary/[0.05] border border-primary/15 hover:bg-accent/15 hover:border-accent/30 group transition-colors"
                             >
                                 <Book className="w-4 h-4 text-text/85 group-hover:text-accent" />
-                                <span className="text-text text-h6  group-hover:text-accent">
+                                <span className="text-body-sm font-semibold text-text group-hover:text-accent sm:text-h6">
                                     {sub}
                                 </span>
                             </Link>

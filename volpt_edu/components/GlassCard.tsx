@@ -20,19 +20,19 @@ const GlassCard: React.FC<GlassCardProps> = ({
             bg: "bg-primary/[0.05]",
             blur: "backdrop-blur-md",
             border: "border-primary/[0.1]",
-            shadow: "shadow-sm",
+            shadow: "shadow-none",
         },
         medium: {
             bg: "bg-primary/[0.08]",
             blur: "backdrop-blur-xl",
             border: "border-primary/[0.15]",
-            shadow: "shadow-md",
+            shadow: "shadow-none",
         },
         high: {
             bg: "bg-primary/[0.12]",
             blur: "backdrop-blur-2xl",
             border: "border-primary/[0.2]",
-            shadow: "shadow-lg",
+            shadow: "shadow-none",
         },
     };
 

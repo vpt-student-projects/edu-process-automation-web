@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import GlassCard from "@/components/GlassCard";
 import { BookOpen, Calendar, Users } from "lucide-react";
 
@@ -35,11 +35,11 @@ const features = [
 
 export default function LandingPage() {
     return (
-        <div className="p-6 w-full flex flex-col gap-5 flex-1 min-h-full">
+        <div className="flex min-h-full w-full flex-1 flex-col gap-4 p-4 sm:gap-5 sm:p-6 lg:p-8">
             {/* Шапка */}
-            <div className="flex items-center text-left space-x-4">
+            <div className="flex items-center gap-3 text-left sm:gap-4">
                 <svg
-                    className="w-[120px] md:w-[100px] sm:w-[80px] h-auto flex-shrink-0"
+                    className="h-auto w-20 flex-shrink-0 sm:w-24 lg:w-[120px]"
                     viewBox="0 0 88 32"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -81,17 +81,20 @@ export default function LandingPage() {
                     />
                 </svg>
                 <div>
-                    <p className="text-text/40 text-caption tracking-tight">
+                    <p className="text-caption tracking-tight text-text/45 sm:text-body-sm">
                         Государственное бюджетное профессиональное
                         образовательное учреждение «Волжский политехнический
                         техникум»
                     </p>
-                    <h1 className="text-text text-h3 tracking-tight drop-shadow-md">
+                    <h1 className="text-h4 tracking-tight text-text drop-shadow-md sm:text-h3">
                         Электронное образование
                     </h1>
                 </div>
             </div>
-            <GlassCard className="p-5 relative overflow-hidden" intensity="low">
+            <GlassCard
+                className="relative overflow-hidden p-4 sm:p-5"
+                intensity="low"
+            >
                 {/* Декоративный кружок */}
                 <div className="absolute -bottom-20 -right-10 w-44 h-44 rounded-full bg-accent/10" />
                 <div className="absolute -bottom-4 -right-2 w-24 h-24 rounded-full bg-accent/20" />
@@ -99,7 +102,7 @@ export default function LandingPage() {
                 <p className="text-caption text-accent uppercase tracking-widest mb-1">
                     Цифровая платформа
                 </p>
-                <p className="text-body text-text leading-relaxed max-w-xs">
+                <p className="max-w-xs text-body-sm leading-relaxed text-text sm:text-body">
                     Работа с учебными группами, дисциплинами и расписанием — в
                     одном месте.
                 </p>
@@ -107,20 +110,20 @@ export default function LandingPage() {
 
             {/* Карточки */}
             <div className="flex flex-col gap-3">
-                <p className="text-caption text-accent px-2 uppercase tracking-widest ml-1">
+                <p className="px-2 text-caption uppercase tracking-widest text-accent md:col-span-3">
                     Возможности
                 </p>
                 {features.map((f, i) => (
                     <GlassCard
                         key={i}
-                        className={`group p-4 flex items-start gap-4
+                        className={`group flex items-start gap-4 p-4
                                 cursor-default select-none
                                 transition-all duration-400 ease-in-out
                                 ${f.glow}
                                 `}
                         intensity="low"
                     >
-                        <div className="flex flex-row items-center gap-4 w-full">
+                        <div className="flex w-full flex-row items-center gap-3 sm:gap-4">
                             <div
                                 className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0
                                             transition-all duration-300

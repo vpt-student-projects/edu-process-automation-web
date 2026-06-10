@@ -30,12 +30,12 @@ function DayCardComponent({
 
     return (
         <GlassCard
-            className={`flex flex-col h-full !rounded-[1.5rem] ${isActive ? "!border-accent/85 shadow-accent/55" : ""}`}
+            className={`flex h-full flex-col !rounded-[1.25rem] sm:!rounded-[1.5rem] ${isActive ? "!border-accent/85 shadow-accent/55" : ""}`}
             intensity="medium"
         >
-            <div className="p-5 border-b border-primary/[0.1]">
-                <div className="flex justify-between items-center">
-                    <h3 className="text-text text-h5 tracking-tight">
+            <div className="border-b border-primary/[0.1] p-4 sm:p-5">
+                <div className="flex items-center justify-between gap-3">
+                    <h3 className="text-h6 tracking-tight text-text sm:text-h5">
                         {dayTemplate.dayName}
                     </h3>
                     <span
@@ -50,7 +50,7 @@ function DayCardComponent({
                 </div>
             </div>
 
-            <div className="p-4 space-y-3 flex-1">
+            <div className="flex-1 space-y-3 p-3 sm:p-4">
                 {sorted.length > 0 ? (
                     sorted.map((lesson) => (
                         <LessonCard

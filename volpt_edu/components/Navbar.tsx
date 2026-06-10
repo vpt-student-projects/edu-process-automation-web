@@ -3,8 +3,18 @@
 import React, { useCallback } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Calendar, Users, LogOut, BookOpen, LayoutDashboard } from "lucide-react";
-import { clearAuthSession, getStoredUser, isAdminRole } from "@/lib/auth/session";
+import {
+    Calendar,
+    Users,
+    LogOut,
+    BookOpen,
+    LayoutDashboard,
+} from "lucide-react";
+import {
+    clearAuthSession,
+    getStoredUser,
+    isAdminRole,
+} from "@/lib/auth/session";
 import GlassCard from "@/components/GlassCard";
 
 const teacherNavItems = [
@@ -34,12 +44,12 @@ const Navbar: React.FC = () => {
         : teacherNavItems;
 
     return (
-        <div className="fixed inset-x-0 bottom-5 z-50 flex justify-center">
+        <div className="fixed inset-x-0 bottom-3 z-50 flex justify-center px-3 safe-bottom sm:bottom-5 sm:px-4">
             <GlassCard
                 intensity="medium"
-                className="p-2 !rounded-full !overflow-visible"
+                className="w-full max-w-[min(24rem,calc(100vw-1.5rem))] p-2 !rounded-[1.75rem] !overflow-visible sm:w-auto sm:!rounded-full"
             >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-around gap-1 sm:gap-2">
                     {navItems.map((item) => {
                         const isActive = pathname?.startsWith(item.href);
                         const Icon = item.icon;
@@ -49,7 +59,7 @@ const Navbar: React.FC = () => {
                                 key={item.href}
                                 href={item.href}
                                 className={`
-                relative flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300 group
+                                    relative flex min-w-0 flex-1 items-center justify-center h-12 rounded-full transition-all duration-300 group sm:w-12 sm:flex-none
                 ${isActive ? "text-white" : "text-primary/65 "}
               `}
                             >
@@ -72,7 +82,7 @@ const Navbar: React.FC = () => {
 
                     <button
                         onClick={handleLogout}
-                        className="flex items-center justify-center w-12 h-12 rounded-full text-red-400/85 hover:text-red-50 hover:bg-red-400/85 transition-all active:scale-95"
+                        className="flex h-12 flex-1 items-center justify-center rounded-full text-red-400/85 transition-all hover:bg-red-400/85 hover:text-red-50 active:scale-95 sm:w-12 sm:flex-none"
                         title="Выйти"
                     >
                         <LogOut className="w-5 h-5" />

@@ -43,9 +43,11 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="h-full flex flex-col justify-center">
+        <div className="mx-auto flex h-full w-full max-w-md flex-col justify-center">
             <div className="text-center mb-8">
-                <h2 className="text-text text-h3 mb-2">Добро пожаловать!</h2>
+                <h2 className="mb-2 text-h4 text-text sm:text-h3">
+                    Добро пожаловать!
+                </h2>
                 <p className="text-text/85 text-body">Введите свои данные</p>
             </div>
 
@@ -63,7 +65,7 @@ export default function LoginPage() {
                             value={login}
                             onChange={(event) => setLogin(event.target.value)}
                             required
-                            className="block w-full text-body pl-12 pr-4 py-4 bg-primary/10 border border-primary/15 rounded-2xl text-text/50 group-focus-within:text-secondary group-hover:border-accent placeholder-secondary/60 focus:outline-none focus:ring-1 focus:ring-accent/85 transition-all"
+                            className="block w-full text-body pl-12 pr-4 py-3.5 sm:py-4 bg-primary/10 border border-primary/15 rounded-2xl text-text/50 group-focus-within:text-secondary group-hover:border-accent placeholder-secondary/60 focus:outline-none focus:ring-1 focus:ring-accent/85 transition-all"
                             placeholder="example@example.com"
                         />
                     </div>
@@ -83,7 +85,7 @@ export default function LoginPage() {
                             onChange={(event) =>
                                 setPassword(event.target.value)
                             }
-                            className="block w-full text-body pl-12 pr-12 py-4 bg-primary/10 border border-primary/15 rounded-2xl text-secondary/50 group-focus-within:text-secondary group-hover:border-accent placeholder-secondary/60 focus:outline-none focus:ring-1 focus:ring-accent/85 transition-all"
+                            className="block w-full text-body pl-12 pr-12 py-3.5 sm:py-4 bg-primary/10 border border-primary/15 rounded-2xl text-secondary/50 group-focus-within:text-secondary group-hover:border-accent placeholder-secondary/60 focus:outline-none focus:ring-1 focus:ring-accent/85 transition-all"
                             required
                             placeholder="••••••••"
                         />

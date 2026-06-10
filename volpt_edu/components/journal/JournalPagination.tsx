@@ -19,11 +19,11 @@ export function JournalPagination({
     onNext,
 }: Props) {
     return (
-        <div className="flex-shrink-0 flex items-center justify-between px-4 py-2.5 border-t border-secondary/5 backdrop-blur-md">
+        <div className="flex flex-shrink-0 items-center justify-between gap-2 border-t border-secondary/5 px-2 py-2.5 backdrop-blur-md sm:px-4">
             <button
                 onClick={onPrev}
                 disabled={page === 0}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-secondary/85 hover:bg-background/50 disabled:opacity-25 disabled:cursor-not-allowed transition-all text-body-sm"
+                className="flex items-center gap-1.5 rounded-full px-2 py-1.5 text-body-sm text-secondary/85 transition-all hover:bg-background/50 disabled:cursor-not-allowed disabled:opacity-25 sm:px-3"
             >
                 <ChevronLeft className="w-4 h-4" />
                 <span className="hidden sm:inline font-medium">Назад</span>
@@ -42,7 +42,7 @@ export function JournalPagination({
             <button
                 onClick={onNext}
                 disabled={page === totalPages - 1}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-secondary/85 hover:bg-background/50 disabled:opacity-25 disabled:cursor-not-allowed transition-all text-body-sm"
+                className="flex items-center gap-1.5 rounded-full px-2 py-1.5 text-body-sm text-secondary/85 transition-all hover:bg-background/50 disabled:cursor-not-allowed disabled:opacity-25 sm:px-3"
             >
                 <span className="hidden sm:inline font-medium">Вперёд</span>
                 <ChevronRight className="w-4 h-4" />

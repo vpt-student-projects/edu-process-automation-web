@@ -44,7 +44,7 @@ export function ScheduleCalendar({ weekStart, onDatePick, onToday }: Props) {
     return (
         <GlassCard
             intensity="low"
-            className="w-[280px] mt-3 p-3 backdrop-blur-lg"
+            className="mt-3 w-[calc(100vw-1rem)] max-w-80 p-3 backdrop-blur-lg sm:w-[280px]"
         >
             <div className="mb-3 flex items-center justify-between">
                 <button

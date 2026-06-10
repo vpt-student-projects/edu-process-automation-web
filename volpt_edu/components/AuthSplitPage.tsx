@@ -14,14 +14,12 @@ export default function AuthSplitPage() {
     useEffect(() => {
         if (hasSession) {
             const user = getStoredUser();
-            router.replace(
-                isAdminRole(user?.role) ? "/admin" : "/schedule",
-            );
+            router.replace(isAdminRole(user?.role) ? "/admin" : "/schedule");
         }
     }, [hasSession, router]);
 
     useEffect(() => {
-        const check = () => setIsMobile(window.innerWidth < 768);
+        const check = () => setIsMobile(window.innerWidth < 1024);
         check();
         window.addEventListener("resize", check);
         return () => window.removeEventListener("resize", check);
@@ -40,10 +38,10 @@ export default function AuthSplitPage() {
     if (!isMobile) {
         return (
             <main className="min-h-screen flex flex-row">
-                <section className="w-2/3 min-h-screen flex border-r border-primary/10">
+                <section className="w-[58%] min-h-screen flex border-r border-primary/10 xl:w-2/3">
                     <LandingPage />
                 </section>
-                <section className="w-1/3 min-h-screen flex justify-center p-12 bg-background/85">
+                <section className="w-[42%] min-h-screen flex justify-center p-8 xl:w-1/3 xl:p-12 bg-background/85">
                     <LoginPage />
                 </section>
             </main>
@@ -53,7 +51,7 @@ export default function AuthSplitPage() {
     return (
         <main className="min-h-screen flex flex-col">
             {/* Таб-бар */}
-            <div className="flex border-b border-primary/10 px-4 pt-4 gap-2 flex-shrink-0">
+            <div className="sticky top-0 z-20 flex flex-shrink-0 gap-2 border-b border-primary/10 bg-background/80 px-4 pt-3 backdrop-blur-xl sm:px-6">
                 <button
                     onClick={() => setActiveTab("landing")}
                     className={`flex-1 py-2 text-body-sm font-medium transition-all ${
@@ -81,7 +79,7 @@ export default function AuthSplitPage() {
                 {activeTab === "landing" ? (
                     <LandingPage />
                 ) : (
-                    <div className="p-6 flex flex-col justify-center min-h-[calc(100vh-49px)]">
+                    <div className="flex min-h-[calc(100vh-49px)] flex-col justify-center p-4 sm:p-8 bg-background/65">
                         <LoginPage />
                     </div>
                 )}

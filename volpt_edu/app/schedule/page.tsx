@@ -91,11 +91,11 @@ export default function SchedulePage() {
     }, []);
 
     return (
-        <div className="p-4 md:p-6 w-full mb-24">
-            <div className="mb-4 flex items-center justify-between gap-4">
-                <div className="pl-2 flex items-center gap-3">
+        <div className="mb-28 w-full p-3 sm:p-4 md:p-6">
+            <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex min-w-0 items-center gap-3 sm:pl-2">
                     <svg
-                        className="w-[120px] md:w-[100px] sm:w-[80px] h-auto  flex-shrink-0"
+                        className="h-auto w-16 flex-shrink-0 sm:w-20 lg:w-[120px]"
                         viewBox="0 0 88 32"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
@@ -137,11 +137,11 @@ export default function SchedulePage() {
                             strokeWidth="2"
                         />
                     </svg>
-                    <div>
-                        <h2 className="text-text text-h2 drop-shadow-sm">
+                    <div className="min-w-0">
+                        <h2 className="text-h4 text-text drop-shadow-sm sm:text-h2">
                             Расписание
                         </h2>
-                        <p className="text-text/85 text-body">
+                        <p className="text-body-sm text-text/75 sm:text-body">
                             Ваше расписание на неделю
                         </p>
                     </div>
@@ -170,7 +170,7 @@ export default function SchedulePage() {
                     description="Для выбранного периода нет занятий."
                 />
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-6 xl:grid-cols-3">
                     {scheduleTemplate.map((dayTemplate, index) => {
                         const date = dates[index];
 
