@@ -44,7 +44,7 @@ function GroupCardComponent({ group }: Props) {
                                     group: group.name,
                                     subject: sub,
                                 })}
-                                className="flex items-start gap-2 rounded-xl p-3 bg-primary/[0.05] border border-primary/15 hover:bg-accent/15 hover:border-accent/30 group transition-colors"
+                                className="flex items-center gap-2 rounded-xl p-3 bg-primary/[0.05] border border-primary/15 hover:bg-accent/15 hover:border-accent/30 group transition-colors"
                             >
                                 <Book className="w-4 h-4 text-text/85 group-hover:text-accent" />
                                 <span className="text-body-sm font-semibold text-text group-hover:text-accent sm:text-h6">
